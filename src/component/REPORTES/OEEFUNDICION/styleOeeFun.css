@@ -1,0 +1,70 @@
+#cabezera th {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#cabezera {
+    box-shadow: 5px 5px 5px grey !important;
+    border-top: 5px solid rgb(55, 49, 138);
+}
+#containerTabla{
+
+    margin-top: 30px;
+}
+.D {
+
+    border-top: 5px solid rgb(47, 59, 160) !important;
+    background-color: #2C2C70;
+}
+.R {
+
+    border-top: 5px solid #D9433E !important;
+    background-color: #C42722 !important;
+}
+.Q {
+
+    border-top: 5px solid #5CD65A !important;
+    background-color: #34CC32 !important;
+}
+.OEE {
+
+    border-top: 5px solid #B0B4B3 !important;
+    background-color: #919493 !important;
+}
+
+
+
+.footer {
+    box-shadow: 5px -5px 5px grey !important;
+    border-bottom: 5px solid rgb(55, 49, 138);
+    background : '#4141B3' !important;
+    color : 'white';
+
+}
+.footer th {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background : '#4141B3' !important;
+}
+.Dfooter {
+
+    border-bottom: 5px solid rgb(47, 59, 160) !important;
+    background-color: #2C2C70;
+}
+.Rfooter {
+
+    border-bottom: 5px solid #D9433E !important;
+    background-color: #C42722 !important;
+}
+.Qfooter {
+
+    border-bottom: 5px solid #5CD65A !important;
+    background-color: #34CC32 !important;
+}
+.OEEfooter {
+
+    border-bottom: 5px solid #B0B4B3 !important;
+    background-color: #919493 !important;
+}
+.containerGraf {
+    margin-top: 40px;
+}

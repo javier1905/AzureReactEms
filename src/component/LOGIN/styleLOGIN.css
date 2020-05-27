@@ -1,0 +1,33 @@
+#ContenedorLogin{
+    width: 100%;
+    float:left;
+}
+#Slider{
+    width: 65%;
+    height: 600px;
+    float:left;
+
+}
+.FormLogin{
+    width: 35%;
+    padding: 30px;
+    float: right;
+    -webkit-box-shadow: inset 0px 0px 62px -30px rgba(112,108,112,0.42);
+    -moz-box-shadow: inset 0px 0px 62px -30px rgba(112,108,112,0.42);
+    box-shadow: inset 0px 0px 62px -30px rgba(112,108,112,0.42);
+}
+#buttonIniciarSesion{
+    height:60px;
+    width:100%;
+    margin-Top:10px;
+}
+#mensaje{
+    margin-top:20px
+}
+#ContenedorLogin{
+    box-shadow: black 2px 2px 2px;
+}
+#user , #pass {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}

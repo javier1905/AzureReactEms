@@ -1,0 +1,94 @@
+.contenedor *{
+
+}
+#PlanillaProduccion{
+    border-bottom: 25px;
+    text-align: center;
+}
+.contenedorRechazos > *{
+    margin-right: 10px;
+    display: inline-block;
+}
+.contenedorRechazos{
+    
+    margin-right:20px;
+    padding: 0px;
+    box-sizing: border-box;
+    display: inline-block;
+}
+.tipoRechazo{
+    width: 30px;
+    height: 30px;
+}
+.contenedorFormZonas > *{
+display: inline-block;
+margin-left: 10px;
+}
+.contenedorRechazosYzonas{
+display: inline-block;
+border-radius: 7px;
+border: solid grey 1px;
+padding: 10px;
+box-sizing: border-box;
+width: auto;
+margin-right: 10px;
+}
+/* .Scrap{
+    display: inline-block;
+    box-sizing: border-box;
+    width: 48%;
+}
+.Rechazo{
+    display: inline-block;
+    box-sizing: border-box;
+    width: 48%;
+} */
+.contenedorFormZonas .zona{
+    width: 60px;
+}
+.contenedorFormZonas{
+    margin-left: 0px;
+    margin-right: 0px;
+    width: auto;
+}
+.contenedorParadasMaquina{
+    border-radius: 7px;
+    margin: 0px;
+    padding: 10px;
+    /* width: 100%; */
+}
+.contenedorFechas >*{
+    display: inline-block;
+    margin-right: 10px;
+}
+.contenedorOperarios{
+    /* width: 100%; */
+}
+.contenedorFormPardasMaquina >*{
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 30px;
+}
+#h6Alert{
+    display: inline-block;
+}
+#contenedorOperaio >*{
+    display: inline-block;
+    float: left;
+   
+}
+#contenedorOperaio{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+}
+.contenedorRechazo{
+    display: inline-block;
+    box-sizing: border-box;
+    width: 48%;
+}
+td , th , thead {
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}
