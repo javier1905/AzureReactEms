@@ -18,6 +18,7 @@ class FormLOGIN extends React.Component {
             mensaje : ''
         }
         this.MyAlert = React.createRef (  )
+        this.abortControlller = new AbortController()
     }
     caturaUser = e =>{
         if(e.target.name ==='userName'){
@@ -35,8 +36,9 @@ class FormLOGIN extends React.Component {
             body : JSON.stringify( d ) ,
             headers : {
                 'Accept' : 'Application/json',
-                'Content-Type' : 'Application/json'
-            }
+                'Content-Type' : 'Application/json' ,
+            } ,
+            signal : this.abortControlller.signal
         })
         .then ( json => json.json (  ) )
         .then ( dato => {
@@ -55,8 +57,12 @@ class FormLOGIN extends React.Component {
                 this.setState({ mensaje:dato.mensaje})
             }
         })
+        .catch(e=> { if(e.name === 'AbortError') { this.abortControlller.abort() } })
         e.preventDefault (  )
     }
+    // componentWillMount () {
+    //     this.abortControlller.abort()
+    // }
     render() {
         return (
             <div>

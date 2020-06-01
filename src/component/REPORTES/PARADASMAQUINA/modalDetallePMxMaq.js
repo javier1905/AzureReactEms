@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Dialog from '@material-ui/core/Dialog'
-// import DialogTitle from '@material-ui/core/DialogTitle'
 import Loading from '@material-ui/core/CircularProgress'
 import {Table} from 'react-bootstrap'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -11,10 +10,39 @@ import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
+import Excel from '../../../Imagenes/excel.jpg'
 
 const ModalDetallePMxMaquina = (props) => {
     const [vecDetalleXmaq,setVecDetalleXmaq] = useState([])
     const [loading,setLoading] = useState(props.loadingModalDetallexMaq)
+    const tabla = useRef()
+    function exportTableToExcel(tableID, filename = ''){
+        var downloadLink
+        var dataType = 'application/vnd.ms-excel'
+        // var tableSelect = document.getElementById(tableID);
+        var tableSelect = tabla.current
+        if(tableSelect){
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20')
+        // Specify file name
+        filename = filename?filename+'.xls':'excel_data.xls'
+        // Create download link element
+        downloadLink = document.createElement("a")
+        document.body.appendChild(downloadLink)
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['ufeff', tableHTML], {
+                type: dataType
+            })
+            navigator.msSaveOrOpenBlob( blob, filename)
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML
+            // Setting the file name
+            downloadLink.download = filename
+            //triggering the function
+            downloadLink.click()
+        }
+    }
+    }
     useEffect (()=> {
         setLoading(props.loadingModalDetallexMaq)
         setVecDetalleXmaq(props.vecDetalleXmaq)
@@ -39,6 +67,9 @@ const ModalDetallePMxMaquina = (props) => {
             <AppBar className = { classes.appBar } >
                 <Toolbar>
                     <Typography variant="h4" className = { classes.title } >
+                        <button style = { {  boxShadow : '2px 2px 2px black' ,  borderRadius : 3 , marginRight : 13 , background : 'none' , border : 'none'} }  onClick = { e=> { exportTableToExcel('tabla' , 'paradasDeMaquina')  }  } >
+                            <img src = { Excel }  style = {{ width : 30 }}  alt = 'excel' />
+                        </button>
                         {`Paradas de maquina ${props.maquinaSeleccionada}
                         desde ${Moment(props.fechaDesdeFundicion).format('DD/MM/YYYY')}
                         hasta ${Moment(props.fechaHastaFundicion).format('DD/MM/YYYY')}
@@ -51,7 +82,7 @@ const ModalDetallePMxMaquina = (props) => {
             </AppBar>
             <div>
                 <DialogContent>
-                    <Table responsive={true}>
+                    <Table responsive={true} id = 'tabla' ref = {tabla}>
                         <thead>
                             <tr>
                                 <th>id</th>

@@ -26,56 +26,80 @@ servicios.listaPlantas = async () => {
     }
     return vecPlantas
 }
-servicios.listaAreas = async () => {
+servicios.listaAreas = async (signal , abort) => {
     var vecAreas = []
     try {
-        const result = await fetch(`${urlApi}/api/areas` , {
+        const result = await window.fetch(`${urlApi}/api/areas` ,{
             method : 'GET' ,
-            headers : new Headers ( {
+            headers :  new Headers ({
                 'Accept' : 'Application/json' ,
                 'Content-Type' : 'Application/json' ,
                 authorization : `Bearer ${sessionStorage.getItem('token')}`
-            } )
+            } ) ,
+            signal : signal
         })
         if(result) {
+            if(result.status !==  200) {
+                abort()
+            }
             const json = await result.json()
             if(json) {
                 vecAreas = json
             }
         }
+        else { abort()   }
     }
     catch(e) {
+        if(e.name === 'AbortError') { abort()   }
         vecAreas = []
     }
     return vecAreas
 }
-servicios.listaReporteParadasMaquina = async ( idArea , fechaFundicionDesde , fechaFundicionHasta ) => { console.log(sessionStorage.getItem('token'))
-    var reporte = {vecLabels : [] , vecValues : []}
-    try {
-        const result = await fetch(`${urlApi}/api/reportes/paradasMaquina` , {
+servicios.listaAreas2 = async (abortController , callback ) => {
+    const myFetch = () => {
+        fetch(`${urlApi}/api/areas` ,{
+                method : 'GET' ,
+                headers :  new Headers ({
+                    'Accept' : 'Application/json' ,
+                    'Content-Type' : 'Application/json' ,
+                    authorization : `Bearer ${sessionStorage.getItem('token')}`
+                } ) ,
+                signal : abortController.signal
+        })
+        .then(result => result.json())
+        .then(json =>  {callback(json)} )
+        .catch(e=> { if(e.name === 'AbortError') { abortController.abort() } else ( myFetch() ) })
+    }
+    myFetch()
+}
+servicios.listaReporteParadasMaquina = async ( idArea , fechaFundicionDesde , fechaFundicionHasta , abortController , callback  ) => {
+    const myFetch = () => {
+        fetch(`${urlApi}/api/reportes/paradasMaquina` , {
             method : 'POST' ,
             body : JSON.stringify ( {  idArea , fechaFundicionDesde , fechaFundicionHasta  } ),
             headers : new Headers ( {
                 'Accept' : 'Application/json' ,
                 'Content-Type' : 'Application/json' ,
                 authorization : `Bearer ${sessionStorage.getItem('token')}`
-            } )
+            } ) ,
+            signal : abortController.signal
         })
-        if(result) {
-            const json = await result.json()
-            if(json) {
-                console.log(json)
-                json.forEach((e,i)=> {
-                    reporte.vecLabels.push(e.nombreMaquina)
-                    reporte.vecValues.push(e.Duracion)
+        .then(result => result.json())
+        .then(json => {
+            if(Array.isArray(json)) {
+                var vecLabels = []
+                var vecValues = []
+                json.forEach( e => {
+                    vecLabels.push(e.nombreMaquina)
+                    vecValues.push(e.Duracion)
                 })
+                callback(vecLabels,vecValues)
             }
-        }
+            else { myFetch() }
+        })
+        .catch(e=>{ if(e.name === 'AbortError') {abortController.abort()} else { myFetch() }})
     }
-    catch(e) {
-        reporte = {vecLabels : [] , vecValues : []}
-    }
-    return reporte
+    myFetch()
 }
 servicios.listaDetallePMxMaquina = async (fechaDesdeFundicion , fechaHastaFundicion , nombreMaquina,idArea) => {
     var vecDetallePM = []
@@ -101,36 +125,35 @@ servicios.listaDetallePMxMaquina = async (fechaDesdeFundicion , fechaHastaFundic
     }
     return vecDetallePM
 }
-servicios.listaReporteParadasMaquinaxPM = async (fechaDesdeFundicion , fechaHastaFundicion) => {
-    var reporte = {vecLabels : [] , vecValues : []}
-    try {
-        const urlApi = process.env.REACT_APP_URL_API
-        const result = await fetch( `${urlApi}/api/reportes/paradasMaquinaXpm`, {
+servicios.listaReporteParadasMaquinaxPM = async (fechaDesdeFundicion , fechaHastaFundicion , abortController , callback ) => {
+    const myFetch = ()  => {
+        fetch( `${urlApi}/api/reportes/paradasMaquinaXpm`, {
             method : 'POST' ,
             body : JSON.stringify ({fechaDesdeFundicion , fechaHastaFundicion}) ,
             headers : new Headers ( {
                 'Accept' : 'Application/json' ,
                 'Content-Type' : 'Application/json' ,
                 authorization : `Bearer ${sessionStorage.getItem('token')}`
-            } )
+            } ) ,
+            signal : abortController.signal
         })
-        if (result) {
-            const json = await result.json()
-            if(json) {
-                if(Array.isArray(json)) {
-                    json.sort((a ,b) => b.duracion -a.duracion)
-                    json.forEach((pm , i)=> {
-                        reporte.vecLabels.push(`${pm.nombreParadaMaquina} -- ${pm.nombreArea}`)
-                        reporte.vecValues.push(pm.duracion)
-                    })
-                }
+        .then(result => result.json())
+        .then(json => {
+            if(Array.isArray(json)) {
+                var vecLabels = []
+                var vecValues = []
+                json.sort((a ,b) => b.duracion -a.duracion)
+                json.forEach ( pm => {
+                    vecLabels.push(`${pm.nombreParadaMaquina} -- ${pm.nombreArea}`)
+                    vecValues.push(pm.duracion)
+                })
+                callback(vecLabels , vecValues)
             }
-        }
+            else { myFetch() }
+        })
+        .catch(e => { if(e.name === 'AbortError') { abortController.abort() } else { myFetch()}  })
     }
-    catch(e){
-        reporte = {vecLabels : [] , vecValues : []}
-    }
-    return reporte
+    myFetch()
 }
 servicios.listaDetalleParadasMaquinaxPM = async (fechaDesdeFundicion , fechaHastaFundicion , nombreParadaMaquina) => {
     var vecListaDetallePMxPM= []
@@ -144,11 +167,14 @@ servicios.listaDetalleParadasMaquinaxPM = async (fechaDesdeFundicion , fechaHast
                 authorization : `Bearer ${sessionStorage.getItem('token')}`
             } )
         })
-        if (result) {
+        if (result.ok) {
             const json = await result.json()
             if(json) {
                 vecListaDetallePMxPM = json
             }
+        }
+        else {
+            throw new Error()
         }
     }
     catch(e){

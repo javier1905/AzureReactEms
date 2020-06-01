@@ -26,5 +26,5 @@ const Permisos = (props ) => {
     )
 }
 
-export default Permisos
+export default React.memo ( Permisos )
 

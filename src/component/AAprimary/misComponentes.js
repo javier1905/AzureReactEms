@@ -327,4 +327,4 @@ componente.botonSave = React.forwardRef ( ( props , ref ) => {
         </Button>
 </Tooltip> )
 } )
-export default componente
+export default  componente

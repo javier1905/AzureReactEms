@@ -6,63 +6,55 @@ import {Bar} from 'react-chartjs-2'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import ModalDetalleXMaquina from './modalDetallePMxMaq'
 import ModalDetalleXpm from './modalDetallePMxPM'
-
 const ReporteParadasMaquina = (props) => {
-const [fechaDesdeFundicion,setFechaDesdeFundicion] = useState(new Moment().month(0).date(1))
-const [fechaHastaFundicion,setFechaHastaFundicion] = useState(new Moment ())
-const [idArea,setIdArea] = useState(null)
-const [vecAreas,setVecAreas] = useState([])
-const [vecLabels,setVecLabels] = useState([])
-const [vecValues,setVecValues] = useState([])
-const [openDetalleXmaquina,setOpenDetalleXmaquina] = useState(false)
-const [vecDetalleXmaq,setVecDetalleXmaq] = useState([])
-const [loadingModalDetallexMaq , setLoadingModalDetallexMaq] = useState(true)
-const [maquinaSeleccionada , setMaquinaSeleccionada] = useState(undefined)
+    const [fechaDesdeFundicion,setFechaDesdeFundicion] = useState(new Moment().month(0).date(1))
+    const [fechaHastaFundicion,setFechaHastaFundicion] = useState(new Moment ())
+    const [idArea,setIdArea] = useState(null)
+    const [vecAreas,setVecAreas] = useState([])
+    const [vecLabels,setVecLabels] = useState([])
+    const [vecValues,setVecValues] = useState([])
+    const [openDetalleXmaquina,setOpenDetalleXmaquina] = useState(false)
+    const [vecDetalleXmaq,setVecDetalleXmaq] = useState([])
+    const [loadingModalDetallexMaq , setLoadingModalDetallexMaq] = useState(true)
+    const [maquinaSeleccionada , setMaquinaSeleccionada] = useState(undefined)
 
-const [fechaDesdeFundicion2,setFechaDesdeFundicion2] = useState(new Moment().month(0).date(1))
-const [fechaHastaFundicion2,setFechaHastaFundicion2] = useState(new Moment ())
-const [vecLabels2,setVecLabels2] = useState([])
-const [vecValues2,setVecValues2] = useState([])
-const [vecDetalleXpm,setVecDetalleXpm] = useState([])
-const [loadingModalDetallexpm , setLoadingModalDetallexpm] = useState(true)
-const [openDetalleXpm,setOpenDetalleXpm] = useState(false)
-const [pmSeleccionada , setPmSeleccionada] = useState(undefined)
-
-const grafico = useRef()
-const grafico2 = useRef()
-useEffect( () => {
-    const getListas = async () => {
-        const vecAre = await Servicios.listaAreas()
-        if(Array.isArray(vecAre)) {
-            vecAre.unshift({idArea:null , nombreArea : 'NONE'})
-            setVecAreas(vecAre)
+    const [fechaDesdeFundicion2,setFechaDesdeFundicion2] = useState(new Moment().month(0).date(1))
+    const [fechaHastaFundicion2,setFechaHastaFundicion2] = useState(new Moment ())
+    const [vecLabels2,setVecLabels2] = useState([])
+    const [vecValues2,setVecValues2] = useState([])
+    const [vecDetalleXpm,setVecDetalleXpm] = useState([])
+    const [loadingModalDetallexpm , setLoadingModalDetallexpm] = useState(true)
+    const [openDetalleXpm,setOpenDetalleXpm] = useState(false)
+    const [pmSeleccionada , setPmSeleccionada] = useState(undefined)
+    const grafico = useRef()
+    const grafico2 = useRef()
+    const abortController = new AbortController()
+    const myCallback1 = vec => { if (Array.isArray(vec)){ vec.unshift({idArea : null , nombreArea : 'NONE '}) ; setVecAreas(vec)  } }
+    const myCallback2 = (vecLabels , vecValues) => {
+        if(Array.isArray(vecLabels)) {
+            setVecLabels(vecLabels)
+            setVecValues(vecValues)
         }
     }
-    getListas()
-    try { grafico2.current.chartInstance.plugins.unregister(ChartDataLabels) }
-    catch(e) {}
-    try {  grafico.current.chartInstance.plugins.unregister(ChartDataLabels) }
-    catch(e){}
-} , [props] )
-    useEffect(() => {
-        const getPM = async () => {
-            const vecReportesParaMaquina = await Servicios.listaReporteParadasMaquina (idArea , fechaDesdeFundicion , fechaHastaFundicion )
-            if (vecReportesParaMaquina) {
-                setVecLabels (vecReportesParaMaquina.vecLabels)
-                setVecValues(vecReportesParaMaquina.vecValues)
-            }
+    const myCallback3 = (vecLabels , vecValues) => {
+        if(Array.isArray(vecLabels)) {
+            setVecLabels2(vecLabels)
+            setVecValues2(vecValues)
         }
-        getPM ()
+    }
+    useEffect( () => {
+        Servicios.listaAreas2 (abortController,myCallback1)
+        try { grafico2.current.chartInstance.plugins.unregister(ChartDataLabels) } catch(e) {}
+        try { grafico.current.chartInstance.plugins.unregister(ChartDataLabels) } catch(e){}
+        return () => { abortController.abort() }
+    } , [] )
+    useEffect(() => {
+        Servicios.listaReporteParadasMaquina( idArea , fechaDesdeFundicion , fechaHastaFundicion , abortController , myCallback2  )
+        return () => { abortController.abort() }
     } , [idArea,fechaDesdeFundicion , fechaHastaFundicion] )
     useEffect(() => {
-        const getPM2 = async () => {
-            const vecReportesParaMaquinaxPM = await Servicios.listaReporteParadasMaquinaxPM(fechaDesdeFundicion2 , fechaHastaFundicion2)
-            if(vecReportesParaMaquinaxPM){
-                setVecLabels2(vecReportesParaMaquinaxPM.vecLabels)
-                setVecValues2(vecReportesParaMaquinaxPM.vecValues)
-            }
-        }
-        getPM2 ()
+        Servicios.listaReporteParadasMaquinaxPM(fechaDesdeFundicion2 , fechaHastaFundicion2 , abortController , myCallback3)
+        return () => {abortController.abort()}
     } , [fechaDesdeFundicion2 , fechaHastaFundicion2] )
     const data = {
         labels : vecLabels ,
@@ -324,4 +316,4 @@ useEffect( () => {
         </div>
     )
 }
-export default ReporteParadasMaquina
+export default React.memo( ReporteParadasMaquina )
