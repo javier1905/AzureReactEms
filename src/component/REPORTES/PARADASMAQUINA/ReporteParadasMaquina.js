@@ -42,6 +42,14 @@ const ReporteParadasMaquina = (props) => {
             setVecValues2(vecValues)
         }
     }
+    const myCallback4 = vec => {
+        setVecDetalleXmaq(vec)
+        setLoadingModalDetallexMaq(false)
+    }
+    const myCallback5 = vec => {
+        setVecDetalleXpm(vec)
+        setLoadingModalDetallexpm(false)
+    }
     useEffect( () => {
         Servicios.listaAreas2 (abortController,myCallback1)
         try { grafico2.current.chartInstance.plugins.unregister(ChartDataLabels) } catch(e) {}
@@ -79,14 +87,7 @@ const ReporteParadasMaquina = (props) => {
         if(label !== undefined && value !== undefined){
             setMaquinaSeleccionada(label)
             setOpenDetalleXmaquina(true)
-            const getVecDetallexMaquina = async () => {
-                const vecDetxMaq = await Servicios.listaDetallePMxMaquina (fechaDesdeFundicion , fechaHastaFundicion , label, idArea)
-                if(vecDetxMaq) {
-                    setVecDetalleXmaq(vecDetxMaq)
-                    setLoadingModalDetallexMaq(false)
-                }
-            }
-            getVecDetallexMaquina()
+            Servicios.listaDetallePMxMaquina (fechaDesdeFundicion , fechaHastaFundicion , label, idArea , abortController , myCallback4)
         }
     }
     const closeDetalleXmaquina = () => {
@@ -168,14 +169,7 @@ const ReporteParadasMaquina = (props) => {
         if(label !== undefined && value !== undefined){
             setPmSeleccionada(String(label).trim().split('--')[0])
             setOpenDetalleXpm(true)
-            const getVecDetallexMaquina = async () => {
-                const vecDetxPM = await Servicios.listaDetalleParadasMaquinaxPM (fechaDesdeFundicion , fechaHastaFundicion , String(label).trim().split('--')[0])
-                if(vecDetxPM) {
-                    setVecDetalleXpm(vecDetxPM)
-                    setLoadingModalDetallexpm(false)
-                }
-            }
-            getVecDetallexMaquina()
+            Servicios.listaDetalleParadasMaquinaxPM (fechaDesdeFundicion , fechaHastaFundicion , String(label).trim().split('--')[0], abortController , myCallback5)
         }
     }
     const data2 = {

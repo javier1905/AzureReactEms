@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect , useRef } from 'react'
 import Dialog from '@material-ui/core/Dialog'
 // import DialogTitle from '@material-ui/core/DialogTitle'
 import Loading from '@material-ui/core/CircularProgress'
@@ -11,10 +11,13 @@ import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
+import Tooltip from '@material-ui/core/Tooltip'
+import Excel from '../../../Imagenes/excel.jpg'
 
 const ModalDetallePMxPM = (props) => {
     const [vecDetalleXpm,setVecDetalleXpm] = useState([])
     const [loading,setLoading] = useState(props.loadingModalDetallexpm)
+    const tabla = useRef()
     useEffect (()=> {
         setLoading(props.loadingModalDetallexpm)
         setVecDetalleXpm(props.vecDetalleXpm)
@@ -29,6 +32,33 @@ const ModalDetallePMxPM = (props) => {
         }
     }))
     const classes = useStyles ( )
+    function exportTableToExcel(tableID, filename = ''){
+        var downloadLink
+        var dataType = 'application/vnd.ms-excel'
+        // var tableSelect = document.getElementById(tableID);
+        var tableSelect = tabla.current
+        if(tableSelect){
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20')
+            // Specify file name
+            filename = filename?filename+'.xls':'excel_data.xls'
+            // Create download link element
+            downloadLink = document.createElement("a")
+            document.body.appendChild(downloadLink)
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['ufeff', tableHTML], {
+                    type: dataType
+                })
+                navigator.msSaveOrOpenBlob( blob, filename)
+            }else{
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML
+                // Setting the file name
+                downloadLink.download = filename
+                //triggering the function
+                downloadLink.click()
+            }
+        }
+    }
     return (
         <Dialog
             open = {props.openDetalleXpm}
@@ -39,6 +69,11 @@ const ModalDetallePMxPM = (props) => {
             <AppBar className = { classes.appBar } >
                 <Toolbar>
                     <Typography variant="h4" className = { classes.title } >
+                        <Tooltip title="Export to Excel" interactive>
+                            <button style = { {  boxShadow : '2px 2px 2px black' ,  borderRadius : 3 , marginRight : 13 , background : 'none' , border : 'none'} }  onClick = { e=> { exportTableToExcel('tabla' , 'paradasDeMaquina')  }  } >
+                                <img src = { Excel }  style = {{ width : 30 }}  alt = 'excel' />
+                            </button>
+                        </Tooltip>
                         {`${props.pmSeleccionada}
                         desde ${Moment(props.fechaDesdeFundicion2).format('DD/MM/YYYY')}
                         hasta ${Moment(props.fechaHastaFundicion2).format('DD/MM/YYYY')} ` }
@@ -50,7 +85,7 @@ const ModalDetallePMxPM = (props) => {
             </AppBar>
             <div>
                 <DialogContent>
-                    <Table responsive={true}>
+                    <Table responsive={true} ref = {tabla}>
                         <thead>
                             <tr>
                                 <th>Fecha Fundicion</th>
@@ -74,8 +109,8 @@ const ModalDetallePMxPM = (props) => {
                                                 <td>{Moment(pm.fechaFundicion).utc().hour(3).format('DD/MM/YYYY')}</td>
                                                 <td>{pm.nombreMaquina}</td>
                                                 <td>{pm.nombreArea}</td>
-                                                <td>{Moment(pm.horaInicio).format('HH:mm')}</td>
-                                                <td>{Moment(pm.horaFin).format('HH:mm')}</td>
+                                                <td>{Moment(pm.horaInicio).utc().format('HH:mm')}</td>
+                                                <td>{Moment(pm.horaFin).utc().format('HH:mm')}</td>
                                                 <td>{`${pm.duracion} min`}</td>
                                             </tr>
                                         )
@@ -94,4 +129,4 @@ const ModalDetallePMxPM = (props) => {
         </Dialog>
     )
 }
-export default ModalDetallePMxPM
+export default React.memo( ModalDetallePMxPM )

@@ -17,8 +17,11 @@ class VerificaLOGIN extends React.Component
             },
             comprobacion:true
         }
+        this.aboutController = new AbortController()
     }
     ve = () =>{
+        var cont = 0
+        var cont2 = 0
         const token = sessionStorage.getItem('token')
         fetch(`${process.env.REACT_APP_URL_API}/api/autentificasion`,{
             method:'GET',
@@ -26,7 +29,8 @@ class VerificaLOGIN extends React.Component
                 authorization:`Bearer ${token}`,
                 'Accept' : 'Application/json' ,
                 'Content-Type' : 'Application/json' ,
-            })
+            }) ,
+            signal : this.aboutController.signal
         })
         .then(dato=>dato.json())
         .then(json=>{
@@ -36,15 +40,14 @@ class VerificaLOGIN extends React.Component
                 })
             }
             else{ this.setState({comprobacion:false}) }
-        }).catch( e=> this.setState ( {comprobacion:false } ) )
+        }).catch( e=> {
+            this.setState ( {comprobacion:false } )
+            if (e.name === 'AbortError') { this.aboutController.abort() }
+        } )
     }
     componentDidMount(){ this.ve() }
     componentDidUpdate(){ this.props.findUsuarioLOGIN(this.state.user) }
-    render(){
-        return(<div>
-            { this.state.comprobacion===true? <div></div>: <IndexModalEXPIRASESION/>}
-        </div>)
-    }
+    render(){ return(<div> { this.state.comprobacion===true? <div></div>: <IndexModalEXPIRASESION/>}  </div>)  }
 }
 
 const mapStateToProps = state => ({

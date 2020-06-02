@@ -25,6 +25,9 @@ const OeeFundicion = props => {
 	const [vecDatosOee, setVecDatosOee] = useState([])
 	const [idAgrupar, setIdAgrupar] = useState(1)
 	const [bandera, setBandera] = useState(true)
+	const abortController = new AbortController()
+
+	const myCallback1 =  vec => { setVecDatosOee(vec) ;  setLoading(false)	}
 
 	useEffect(() => {
 		const getListas = async () => {
@@ -59,26 +62,22 @@ const OeeFundicion = props => {
 		getMoldes()
 	}, [idPieza])
 	useEffect(() => {
-		const getListaOee = async () => {
+		if(bandera === true) {
 			setLoading(true)
-			const listaOee = await Servicios.listaOeeFundicion(
+			Servicios.listaOeeFundicion(
 				idMaquina === '' ? null : idMaquina,
 				idPieza === '' ? null : idPieza,
 				idMolde === '' ? null : idMolde,
 				Fechas.DataTimePicker_a_SQL(fechaFundicionDesde),
 				Fechas.DataTimePicker_a_SQL(fechaFundicionHasta),
-				idAgrupar
+				idAgrupar ,
+				abortController ,
+				myCallback1
 			)
-			if (listaOee) {
-				setVecDatosOee(listaOee.vecOeefundicion)
-				setLoading(false)
-			}
-		}
-		if(bandera === true) {
-			getListaOee()
 		}
 			return ( )=> {
 				setBandera(false)
+				abortController.abort()
 			}
 	}, [
 		fechaFundicionDesde,
@@ -104,25 +103,20 @@ const OeeFundicion = props => {
 			setIdMaquina(idMaq)
 			setIdPieza(idPie)
 			setLoading(true)
-			const getListaOee = async () => {
-				if(bandera) {
-					bandera = false
-					const listaOee = await Servicios.listaOeeFundicion(
-						idMaq === '' ? null : idMaq,
-						idPie === '' ? null : idPie,
-						idMol === '' ? null : idMol,
-						Fechas.DD_MM_YYYY_a_DataTimePicker(fecha),
-						Fechas.DD_MM_YYYY_a_DataTimePicker(fecha),
-						idFiltro
-					)
-					if (listaOee) {
-						setVecDatosOee(listaOee.vecOeefundicion)
-						setLoading(false)
-						setIdMolde(idMol)
-					}
-				}
+			const myCallback2 = vec =>  {	setVecDatosOee(vec) ; setLoading(false) ; setIdMolde(idMol)	}
+			if(bandera) {
+				bandera = false
+				Servicios.listaOeeFundicion(
+					idMaq === '' ? null : idMaq,
+					idPie === '' ? null : idPie,
+					idMol === '' ? null : idMol,
+					Fechas.DD_MM_YYYY_a_DataTimePicker(fecha),
+					Fechas.DD_MM_YYYY_a_DataTimePicker(fecha),
+					idFiltro ,
+					abortController ,
+					myCallback2
+				)
 			}
-			getListaOee()
 		}
 		else if ( idFiltro === 2 ) {
 			var semana = undefined
@@ -143,25 +137,23 @@ const OeeFundicion = props => {
 					setIdPieza(idPie)
 					setIdAgrupar(idFiltro)
 					setLoading(true)
-					const getListaOee = async () => {
 						if (barr) {
 							barr = false
-							const listaOee = await Servicios.listaOeeFundicion(
+							Servicios.listaOeeFundicion(
 								idMaq === '' ? null : idMaq,
 								idPie === '' ? null : idPie,
 								idMol === '' ? null : idMol,
 								fe.inicio,
 								fe.fin,
-								idFiltro
+								idFiltro ,
+								abortController ,
+								listaOee => {
+									setVecDatosOee(listaOee)
+									setLoading(false)
+									setIdMolde(idMol)
+								}
 							)
-							if (listaOee) {
-								setVecDatosOee(listaOee.vecOeefundicion)
-								setLoading(false)
-								setIdMolde(idMol)
-							}
 						}
-					}
-					getListaOee()
 		}
 		else if (idFiltro === 3) {
 			var barrera = true
@@ -169,33 +161,30 @@ const OeeFundicion = props => {
 				const mes = parseInt(String (fecha).substring ( 0,2 ) ) -1
 				const anio = parseInt(String (fecha).substring ( 3,7 ) )
                 var desde = `${new Moment({ y: anio, M: mes , d:1 ,	h: 0 ,	m: 0 ,	s:0 , ms : 0 }).format( 'ddd MMM DD YYYY')} 00:00:00 GMT-0300`
-				var hasta = `${new Moment({y:anio, M:mes , d:1 , h:0,m:0,s:0,ms:0}).endOf('month').format(
-					'ddd MMM DD YYYY')} 00:00:00 GMT-0300`
+				var hasta = `${new Moment({y:anio, M:mes , d:1 , h:0,m:0,s:0,ms:0}).endOf('month').format('ddd MMM DD YYYY')} 00:00:00 GMT-0300`
 					setFechaFundicionDesde(desde)
 					setFechaFundicionHasta(hasta)
 					setIdMaquina(idMaq)
 					setIdPieza(idPie)
 					setIdAgrupar(idFiltro)
 					setLoading(true)
-					const getListaOee = async () => {
-						if (barrera) {
-							barrera = false
-							const listaOee = await Servicios.listaOeeFundicion(
-								idMaq === '' ? null : idMaq,
-								idPie === '' ? null : idPie,
-								idMol === '' ? null : idMol,
-								desde,
-								hasta,
-								idFiltro
-							)
-							if (listaOee) {
-								setVecDatosOee(listaOee.vecOeefundicion)
+					if (barrera) {
+						barrera = false
+						Servicios.listaOeeFundicion(
+							idMaq === '' ? null : idMaq,
+							idPie === '' ? null : idPie,
+							idMol === '' ? null : idMol,
+							desde,
+							hasta,
+							idFiltro ,
+							abortController ,
+							listaOee =>{
+								setVecDatosOee(listaOee)
 								setLoading(false)
 								setIdMolde(idMol)
 							}
-						}
+						)
 					}
-					getListaOee()
 				}
 		}
 		else if ( idFiltro === 4 ) {
@@ -209,25 +198,23 @@ const OeeFundicion = props => {
 			setIdPieza(idPie)
 			setIdAgrupar(idFiltro)
 			setLoading(true)
-			const getListaOee = async () => {
-				if (bb) {
-					bb = false
-					const listaOee = await Servicios.listaOeeFundicion(
-						idMaq === '' ? null : idMaq,
-						idPie === '' ? null : idPie,
-						idMol === '' ? null : idMol,
-						feInicio,
-						feFin,
-						idFiltro
-					)
-					if (listaOee) {
-						setVecDatosOee(listaOee.vecOeefundicion)
+			if (bb) {
+				bb = false
+				Servicios.listaOeeFundicion(
+					idMaq === '' ? null : idMaq,
+					idPie === '' ? null : idPie,
+					idMol === '' ? null : idMol,
+					feInicio,
+					feFin,
+					idFiltro ,
+					abortController ,
+					listaOee => {
+						setVecDatosOee(listaOee)
 						setLoading(false)
 						setIdMolde(idMol)
 					}
-				}
+				)
 			}
-			getListaOee()
 		}
 	}
 	return (
