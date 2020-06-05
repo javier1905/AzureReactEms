@@ -12,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
 import Excel from '../../../Imagenes/excel.jpg'
 import Tooltip from '@material-ui/core/Tooltip'
+import './styleModalDetallePMxMAQ.css'
 
 const ModalDetallePMxMaquina = (props) => {
     const [vecDetalleXmaq,setVecDetalleXmaq] = useState([])
@@ -69,7 +70,7 @@ const ModalDetallePMxMaquina = (props) => {
                 <Toolbar>
                     <Typography variant="h4" className = { classes.title } >
                         <Tooltip title="Export to Excel" interactive>
-                            <button style = { {  boxShadow : '2px 2px 2px black' ,  borderRadius : 3 , marginRight : 13 , background : 'none' , border : 'none'} }  onClick = { e=> { exportTableToExcel('tabla' , 'paradasDeMaquina')  }  } >
+                            <button id='btn_exportExcel' style = { {  boxShadow : '2px 2px 2px black' ,  borderRadius : 3 , marginRight : 13 , background : 'none' , border : 'none'} }  onClick = { e=> { exportTableToExcel('tabla' , 'paradasDeMaquina')  }  } >
                                 <img src = { Excel }  style = {{ width : 30 }}  alt = 'excel' />
                             </button>
                         </Tooltip>

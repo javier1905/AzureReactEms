@@ -34,37 +34,24 @@ const GraficoOeeFun = props => {
 
 	const abortController = new AbortController()
 	useEffect(() => {
-		const getListas = async () => {
-			const listaMaq = await Servicios.listaMaquinas()
-			const listaPie = await Servicios.listaPiezas()
-			if ( Array.isArray(listaMaq) && listaMaq) {
-				listaMaq.unshift({ idMaquina: '', nombreMaquina: 'NONE' })
-				setVecMaquinas(listaMaq)
-			}
-			if (listaPie) {
-				if (Array.isArray(listaPie)) {
-					listaPie.unshift({ idPieza: '', nombrePieza: 'NONE' })
-					setVecPiezas(listaPie)
-				}
-			}
-		}
-		getListas()
+		Servicios.listaMaquinas(abortController , vec => {
+			vec.unshift({ idMaquina: '', nombreMaquina: 'NONE' })
+			setVecMaquinas(vec)
+		})
+		Servicios.listaPiezas(abortController , vec => {
+			vec.unshift({ idPieza: '', nombrePieza: 'NONE' })
+			setVecPiezas(vec)
+		})
 		try {
 			grafico.current.chartInstance.plugins.unregister(ChartDataLabels)
 		} catch (e) {}
 	}, [props])
 	useEffect(() => {
-		const getMoldes = async () => {
-			const listaMoldes = await Servicios.listaMoldes(idPieza)
-			if (listaMoldes) {
-				if (Array.isArray(listaMoldes)) {
-					listaMoldes.unshift({ idMolde: '', nombreMolde: 'NONE' })
-				}
-				setIdMolde('')
-				setVecMoldes(listaMoldes)
-			}
-		}
-		getMoldes()
+		Servicios.listaMoldes(idPieza , abortController , vec => {
+			vec.unshift({ idMolde: '', nombreMolde: 'NONE' })
+			setIdMolde('')
+			setVecMoldes(vec)
+		})
 	}, [idPieza])
 	useEffect(() => {
 		setLoading(true)

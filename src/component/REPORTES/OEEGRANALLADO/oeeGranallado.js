@@ -24,46 +24,39 @@ const OeeGranallado = ( props ) => {
     const [vecDatosOee , setVecDatosOee] = useState ( [  ] )
     const [idAgrupar , setIdAgrupar] = useState( 1 )
     const [bandera , setBandera] = useState ( true )
+    const abortController = new AbortController()
     useEffect ( (  ) => {
-        const getListas = async (  ) => {
-            const listaMaq = await Servicios.listaMaquinas (  )
-            const listaPie = await Servicios.listaPiezas (  )
-            listaMaq.unshift ( { idMaquina : '' , nombreMaquina : 'NONE' , idTipoMaquina : 1 } )
-            if ( listaMaq) {  setVecMaquinas ( listaMaq.filter ( mq => mq.idTipoMaquina === 1 ) )  }
-            listaPie.unshift ( { idPieza : '' , nombrePieza : 'NONE' } )
-            if ( listaPie) {  setVecPiezas ( listaPie )  }
-        }
-        getListas (  )
+        Servicios.listaMaquinas ( abortController , vec => {
+            vec.unshift ( { idMaquina : '' , nombreMaquina : 'NONE' , idTipoMaquina : 1 } )
+            if ( vec) {  setVecMaquinas ( vec.filter ( mq => mq.idTipoMaquina === 1 ) )  }
+        } )
+        Servicios.listaPiezas ( abortController , vec => {
+            vec.unshift ( { idPieza : '' , nombrePieza : 'NONE' } )
+            if ( vec) {  setVecPiezas ( vec )  }
+        } )
     }  , [ props ]  )
     useEffect ( (  ) => {
-        const getMoldes = async (  ) => {
-            const listaMoldes = await  Servicios.listaMoldes ( idPieza )
-            if ( listaMoldes ) {
+            Servicios.listaMoldes ( idPieza , abortController , vec => {
                 setIdMolde ( '' )
-                setVecMoldes ( listaMoldes )
-            }
-        }
-        getMoldes (  )
+                setVecMoldes ( vec )
+            } )
     } , [ idPieza ] )
     useEffect ( (  ) => {
         setLoading ( true )
-        const getListaOee = async (  ) => {
-            const listaOee = await Servicios.listaOeeGranallado (  idMaquina === '' ? null : idMaquina ,
-            idPieza === '' ? null : idPieza ,  idMolde === '' ? null : idMolde , fechaProduccionDesde , fechaProduccionHasta , idAgrupar  )
-            if(listaOee) {
-                if (listaOee.vecOeeGranallado && Array.isArray(listaOee.vecOeeGranallado) ) {
-                    setVecDatosOee(listaOee.vecOeeGranallado)
+        if(bandera) {
+            Servicios.listaOeeGranallado (  idMaquina === '' ? null : idMaquina ,
+            idPieza === '' ? null : idPieza ,  idMolde === '' ? null : idMolde , fechaProduccionDesde , fechaProduccionHasta , idAgrupar , abortController , vec => {
+                if(Array.isArray(vec)) {
+                    setVecDatosOee(vec)
                     setLoading(false)
                 }
-            }
-        }
-        if(bandera) {
-            getListaOee (  )
+            }  )
         }
         return () => {
             setBandera(false)
+            abortController.abort()
         }
-    }  , [ fechaProduccionDesde , fechaProduccionHasta , idMaquina , idPieza ,  idMolde , idAgrupar , bandera ]  )
+    }  , [ fechaProduccionDesde , fechaProduccionHasta , idMaquina , idPieza ,  idMolde , idAgrupar  ]  )
     const vecAgrupar = [
         { idAgrupar : 1 , nombreAgrupar : 'DIA'} ,
         { idAgrupar : 2 , nombreAgrupar : 'SEMANA'} ,
@@ -75,29 +68,28 @@ const OeeGranallado = ( props ) => {
             setLoading(true)
             var ban = true
             const fe = Fechas.DD_MM_YYYY_a_DataTimePicker(fecha)
-            const getDatosOee = async () => {
-                if(ban) {
-                    ban = false
-                const datosOeeGra = await Servicios.listaOeeGranallado (
-                    idMaq === '' ? null : idMaq ,
-                    idPie === '' ? null : idPie,
-                    idMol === '' ? null : idMol,
-                    Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
-                    Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
-                    idFiltro )
-                if ( datosOeeGra ) {
-                    setVecDatosOee(datosOeeGra.vecOeeGranallado)
-                    setLoading(false)
-                    setIdMolde (idMol)
-                }
-            }
-            }
                 setIdAgrupar(idFiltro)
                 setFechaProduccionDesde( fe )
                 setFechaProduccionHasta ( fe )
                 setIdMaquina(idMaq)
                 setIdPieza(idPie)
-                getDatosOee()
+                if(ban) {
+                    ban = false
+                    Servicios.listaOeeGranallado (
+                        idMaq === '' ? null : idMaq ,
+                        idPie === '' ? null : idPie,
+                        idMol === '' ? null : idMol,
+                        Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
+                        Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
+                        idFiltro ,
+                        abortController ,
+                        vec => {
+                            setVecDatosOee(vec)
+                            setLoading(false)
+                            setIdMolde (idMol)
+                        }
+                    )
+                }
         }
         else if (idFiltro === 2 ) {
             var semana = undefined
@@ -114,30 +106,28 @@ const OeeGranallado = ( props ) => {
             console.log(feSem)
             setLoading(true)
             var banSem = true
-            const getDatosOee = async () => {
-                if(banSem) {
-                    banSem = false
-                const datosOeeGra = await Servicios.listaOeeGranallado (
+            setIdAgrupar(idFiltro)
+            setFechaProduccionDesde( feSem.inicio)
+            setFechaProduccionHasta ( feSem.fin )
+            setIdMaquina(idMaq)
+            setIdPieza(idPie)
+            if(banSem) {
+                banSem = false
+                Servicios.listaOeeGranallado (
                     idMaq === '' ? null : idMaq ,
                     idPie === '' ? null : idPie,
                     idMol === '' ? null : idMol,
                     feSem.inicio ,
                     feSem.fin ,
-                    idFiltro )
-                if ( datosOeeGra ) {
-                    setVecDatosOee(datosOeeGra.vecOeeGranallado)
-                    setLoading(false)
-                    setIdMolde (idMol)
-                }
+                    idFiltro ,
+                    abortController ,
+                    vec => {
+                        setVecDatosOee(vec)
+                        setLoading(false)
+                        setIdMolde (idMol)
+                    }
+                )
             }
-            }
-                setIdAgrupar(idFiltro)
-                setFechaProduccionDesde( feSem.inicio)
-                setFechaProduccionHasta ( feSem.fin )
-                setIdMaquina(idMaq)
-                setIdPieza(idPie)
-                getDatosOee()
-
         }
         else if (idFiltro === 3 ) {
             setLoading(true)
@@ -146,29 +136,28 @@ const OeeGranallado = ( props ) => {
             const anio = parseInt(String(fecha).substring(3,7))
             var desde = `${new Moment({ y: anio, M: mes , d:1 ,	h: 0 ,	m: 0 ,	s:0 , ms : 0 }).format( 'ddd MMM DD YYYY')} 00:00:00 GMT-0300` ;
             var hasta = `${new Moment({y:anio, M:mes , d:1 , h:0,m:0,s:0,ms:0}).endOf('month').format('ddd MMM DD YYYY')} 00:00:00 GMT-0300` ;
-            const getDatosOee = async () => {
-                if(ban3) {
-                    ban3 = false
-                    const datosOeeGra = await Servicios.listaOeeGranallado (
-                        idMaq === '' ? null : idMaq ,
-                        idPie === '' ? null : idPie,
-                        idMol === '' ? null : idMol,
-                        desde ,
-                        hasta ,
-                        idFiltro )
-                    if ( datosOeeGra ) {
-                        setVecDatosOee(datosOeeGra.vecOeeGranallado)
+            setIdAgrupar(idFiltro)
+            setFechaProduccionDesde( desde )
+            setFechaProduccionHasta ( hasta )
+            setIdMaquina(idMaq)
+            setIdPieza(idPie)
+            if(ban3) {
+                ban3 = false
+                Servicios.listaOeeGranallado (
+                    idMaq === '' ? null : idMaq ,
+                    idPie === '' ? null : idPie,
+                    idMol === '' ? null : idMol,
+                    desde ,
+                    hasta ,
+                    idFiltro ,
+                    abortController ,
+                    vec => {
+                        setVecDatosOee(vec)
                         setLoading(false)
                         setIdMolde (idMol)
                     }
-                }
+                )
             }
-                setIdAgrupar(idFiltro)
-                setFechaProduccionDesde( desde )
-                setFechaProduccionHasta ( hasta )
-                setIdMaquina(idMaq)
-                setIdPieza(idPie)
-                getDatosOee()
         }
         else if ( idFiltro === 4 ) {
             setLoading(true)
@@ -176,29 +165,28 @@ const OeeGranallado = ( props ) => {
 			const a = parseInt ( fecha )
 			var feInicio = `${new Moment( { y: a , M : 0 , d:1 , h:0 , m:0, s:0 } ).format('ddd MMM DD YYYY')} 00:00:00 GMT-0300`
 			var feFin = `${new Moment( { y: a , M : 11 , d:31 , h:0 , m:0, s:0 } ).format('ddd MMM DD YYYY')} 00:00:00 GMT-0300`
-            const getDatosOee = async () => {
-                if(ban4) {
-                    ban4 = false
-                    const datosOeeGra = await Servicios.listaOeeGranallado (
-                        idMaq === '' ? null : idMaq ,
-                        idPie === '' ? null : idPie,
-                        idMol === '' ? null : idMol,
-                        feInicio ,
-                        feFin ,
-                        idFiltro )
-                    if ( datosOeeGra ) {
-                        setVecDatosOee(datosOeeGra.vecOeeGranallado)
-                        setLoading(false)
-                        setIdMolde (idMol)
-                    }
-                }
-            }
                 setIdAgrupar(idFiltro)
                 setFechaProduccionDesde( feInicio )
                 setFechaProduccionHasta ( feFin )
                 setIdMaquina(idMaq)
                 setIdPieza(idPie)
-                getDatosOee()
+                if(ban4) {
+                    ban4 = false
+                    Servicios.listaOeeGranallado (
+                        idMaq === '' ? null : idMaq ,
+                        idPie === '' ? null : idPie,
+                        idMol === '' ? null : idMol,
+                        feInicio ,
+                        feFin ,
+                        idFiltro ,
+                        abortController ,
+                        vec => {
+                            setVecDatosOee(vec)
+                            setLoading(false)
+                            setIdMolde (idMol)
+                        }
+                    )
+                }
         }
     }
     return (
@@ -206,7 +194,7 @@ const OeeGranallado = ( props ) => {
             <Typography style = { { marginTop : 15 , marginBottom : 20 } }  variant ='h3'>OEE Granallado</Typography>
             <div>
                 <MyComponent.fecha id = 'fechaDesde' label = 'Fecha Produccion Desde' value = { fechaProduccionDesde } onChange = { e => {setBandera(true); setFechaProduccionDesde ( e )} } />
-                <MyComponent.fecha id = 'fechaHasta' label = 'Fecha Produccion Hasta' value = { fechaProduccionHasta } onChange = { e => setFechaProduccionHasta ( e ) } />
+                <MyComponent.fecha id = 'fechaHasta' label = 'Fecha Produccion Hasta' value = { fechaProduccionHasta } onChange = { e =>{ setBandera(true); setFechaProduccionHasta ( e )} } />
                 <MyComponent.listaDesplegable label = 'Maquina' value = { idMaquina } onChange = { e => {setBandera(true); setIdMaquina ( e.target.value )} } array = { vecMaquinas } member = { { valueMember : 'idMaquina' , displayMember : 'nombreMaquina' } } />
                 <MyComponent.listaDesplegable label = 'Pieza' value = { idPieza } onChange = { e => {setBandera(true); setIdPieza ( e.target.value )} } array = { vecPiezas } member = { { valueMember : 'idPieza' , displayMember : 'nombrePieza' } } />
                 <MyComponent.listaDesplegable label = 'Molde' value = { idMolde } onChange = { e => {setBandera(true); setIdMolde ( e.target.value )} } array = { vecMoldes } member = { { valueMember : 'idMolde' , displayMember : 'nombreMolde' } } />
@@ -269,4 +257,4 @@ const OeeGranallado = ( props ) => {
     )
 }
 
-export default OeeGranallado
+export default React.memo ( OeeGranallado )

@@ -30,36 +30,21 @@ const OeeFundicion = props => {
 	const myCallback1 =  vec => { setVecDatosOee(vec) ;  setLoading(false)	}
 
 	useEffect(() => {
-		const getListas = async () => {
-			const listaMaq = await Servicios.listaMaquinas()
-			const listaPie = await Servicios.listaPiezas()
-			if (listaMaq) {
-				if( Array.isArray(listaMaq) ) {
-					listaMaq.unshift({ idMaquina: '', nombreMaquina: 'NONE' })
-					setVecMaquinas(listaMaq)
-				}
-			}
-			if (listaPie) {
-				if(Array.isArray(listaPie)) {
-					listaPie.unshift({ idPieza: '', nombrePieza: 'NONE' })
-					setVecPiezas(listaPie)
-				}
-			}
-		}
-		getListas()
+			Servicios.listaMaquinas(abortController , vec => {
+				vec.unshift({ idMaquina: '', nombreMaquina: 'NONE' })
+				setVecMaquinas(vec)
+			})
+			Servicios.listaPiezas(abortController , vec => {
+				vec.unshift({ idPieza: '', nombrePieza: 'NONE' })
+				setVecPiezas(vec)
+			})
 	}, [props])
 	useEffect(() => {
-		const getMoldes = async () => {
-			const listaMoldes = await Servicios.listaMoldes(idPieza)
-			if (listaMoldes) {
-				if (Array.isArray(listaMoldes)) {
-					listaMoldes.unshift({ idMolde: '', nombreMolde: 'NONE' })
-				}
-				setIdMolde('')
-				setVecMoldes(listaMoldes)
-			}
-		}
-		getMoldes()
+		Servicios.listaMoldes(idPieza , abortController , vec => {
+			vec.unshift({ idMolde: '', nombreMolde: 'NONE' })
+			setIdMolde('')
+			setVecMoldes(vec)
+		})
 	}, [idPieza])
 	useEffect(() => {
 		if(bandera === true) {
