@@ -7,7 +7,6 @@ import $ from 'jquery'
 import Typography from '@material-ui/core/Typography'
 
 const indexHOME = ( prosp ) =>  {
-
     setTimeout ( (  ) => {
         const imgHeader = $('#imgHeader')
         imgHeader.css ( 'opacity' , 1 )
@@ -74,7 +73,6 @@ const indexHOME = ( prosp ) =>  {
                         </p>
                     </div>
                     <div id = 'containerClientes'>
-
                     </div>
                 </div>
                 <footer>

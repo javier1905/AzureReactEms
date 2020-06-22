@@ -22,6 +22,7 @@ import $ from 'jquery'
 import 'jspdf-autotable'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import Loading from '@material-ui/core/CircularProgress'
+import './styleListaPlanillaProduccion.css'
 
 const ListaPlanilasProduccion = ( props ) => {
     var classes = estilos (  )
@@ -172,9 +173,9 @@ const ListaPlanilasProduccion = ( props ) => {
         <div>
             <ModalAltaPlanilla  show = { show } handleClose = { handleClose } />
             <ModalAltaPlanilla  show = { showUpdate } handleClose = { handleCloseUpdate } />
-            <div>
+            <div className="containerFilter">
                 <div>
-                    <h2>Listado Planilla Produccion</h2>
+                    <h3>Listado Planilla Produccion</h3>
                     <div  style = { { paddingTop : 10 , width : '100%' } } >
                         <FilterListIcon style = { { float : 'right'  } } />
                     </div>
@@ -351,8 +352,8 @@ const ListaPlanilasProduccion = ( props ) => {
                         </IconButton>
                     </Tooltip>
                 </div>
-                <div>
-                    <div style = {{height:500,overflow:'scroll',overflowX: 'hidden' , width : '70%' , float : "left" , boxSizing : 'border-box' , padding : 10}} >
+                <div className="contanierMain">
+                    <div className="containerTabla" >
                         <Table responsive  hover>
                             <thead>
                                 <tr>
@@ -392,7 +393,7 @@ const ListaPlanilasProduccion = ( props ) => {
                             </tbody>
                         </Table>
                     </div>
-                    <div id='parteDiario'  style = { { width : '30%' , float : "right" , background : 'white' , boxSizing : 'border-box' , padding : 10}}>
+                    <div id='parteDiario'  className="containerParteDiario">
                         {
                             planillaSeleccionada ?
                                 <div>
@@ -567,7 +568,6 @@ const ListaPlanilasProduccion = ( props ) => {
                                 <div><img style = { { boxSizing : 'border-box' , padding : 30 , width : '100%' } } alt = 'Sin resultados' src  = { imgNofound }></img></div>
                         }
                     </div>
-                    <div style = {{clear : 'both'}}></div>
                 </div>
             </div>
         </div>

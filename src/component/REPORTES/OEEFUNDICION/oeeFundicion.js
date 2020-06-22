@@ -27,17 +27,31 @@ const OeeFundicion = props => {
 	const [bandera, setBandera] = useState(true)
 	const abortController = new AbortController()
 
-	const myCallback1 =  vec => { setVecDatosOee(vec) ;  setLoading(false)	}
+	const myCallback1 =  vec => {
+		setBandera(false)
+		setVecDatosOee(vec)
+		setLoading(false)
+	}
 
 	useEffect(() => {
-			Servicios.listaMaquinas(abortController , vec => {
-				vec.unshift({ idMaquina: '', nombreMaquina: 'NONE' })
-				setVecMaquinas(vec)
-			})
-			Servicios.listaPiezas(abortController , vec => {
-				vec.unshift({ idPieza: '', nombrePieza: 'NONE' })
-				setVecPiezas(vec)
-			})
+		Servicios.listaOeeFundicion(
+			idMaquina === '' ? null : idMaquina,
+			idPieza === '' ? null : idPieza,
+			idMolde === '' ? null : idMolde,
+			Fechas.DataTimePicker_a_SQL(fechaFundicionDesde),
+			Fechas.DataTimePicker_a_SQL(fechaFundicionHasta),
+			idAgrupar ,
+			abortController ,
+			myCallback1
+		)
+		Servicios.listaMaquinas(abortController , vec => {
+			vec.unshift({ idMaquina: '', nombreMaquina: 'NONE' })
+			setVecMaquinas(vec)
+		})
+		Servicios.listaPiezas(abortController , vec => {
+			vec.unshift({ idPieza: '', nombrePieza: 'NONE' })
+			setVecPiezas(vec)
+		})
 	}, [props])
 	useEffect(() => {
 		Servicios.listaMoldes(idPieza , abortController , vec => {
@@ -60,18 +74,17 @@ const OeeFundicion = props => {
 				myCallback1
 			)
 		}
-			return ( )=> {
-				setBandera(false)
-				abortController.abort()
-			}
+		return ( )=> {
+			setBandera(false)
+			abortController.abort()
+		}
 	}, [
 		fechaFundicionDesde,
 		fechaFundicionHasta,
 		idMaquina,
 		idPieza,
 		idMolde,
-		idAgrupar ,
-		bandera
+		idAgrupar
 	])
 	const vecAgrupar = [
 		{ idAgrupar: 1, nombreAgrupar: 'DIA' },

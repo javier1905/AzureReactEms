@@ -46,7 +46,7 @@ const ListaClientes = ( props ) => {
     }
     return (
     <div style = { { padding : 20 } }>
-        <Typography variant = 'h1' >ListaClientes</Typography>
+        <Typography variant = 'h4' >ListaClientes</Typography>
         <MyComponent.botonAdd
             texto = 'Add new client'
             fontSize = 'large'

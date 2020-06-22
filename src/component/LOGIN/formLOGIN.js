@@ -67,7 +67,7 @@ class FormLOGIN extends React.Component {
         return (
             <div>
                 <Form onSubmit = { this.miSubmit }  >
-                    <Typography style = { { marginBottom : 30 } } variant = 'h2' >Inicio de Sesion</Typography>
+                    <Typography style = { { marginBottom : 30 } } variant = 'h4' >Inicio de Sesion</Typography>
                     <MyComponent.texto
                         id = 'user'
                         name="userName"

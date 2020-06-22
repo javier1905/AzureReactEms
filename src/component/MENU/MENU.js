@@ -1,320 +1,202 @@
-import React from 'react'
-import {Navbar,Nav,NavDropdown,SplitButton,ButtonToolbar,Dropdown,Card} from 'react-bootstrap'
-import {withRouter} from 'react-router-dom'
+import React, { useState , useRef } from 'react'
+import {useSelector} from 'react-redux'
+import MenuIcon from '@material-ui/icons/Menu'
+import PermDataSettingIcon from '@material-ui/icons/PermDataSetting';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import ViewQuiltIcon from '@material-ui/icons/ViewQuilt'
+import TimelineIcon from '@material-ui/icons/Timeline'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import {useHistory , useRouteMatch} from 'react-router-dom'
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import avatar from '../../Imagenes/avatar.jpg'
 import './styleMENU.css'
-import logo from '../../Imagenes/logo.png'
 
-import { fade, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-
-class Menu2 extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            anchorEl:false,
-            setAnchorEl:false,
-            mobileMoreAnchorEl:false,
-            setMobileMoreAnchorEl:false
-        };
+const Menu = (props) => {
+    const usuario = useSelector( store =>  store.UsuarioLOGIN )
+    const history = useHistory()
+    const router = useRouteMatch()
+    const menu = useRef()
+    const menuIzquierdo = useRef()
+    const menuIzquierdoResponsive = useRef()
+    const despliegaMenu = e => {
+        // console.log(e.currentTarget)
+        // e.currentTarget.classList.add('despliegaMenu')
+        menu.current.classList.add('despliegaMenu')
+        menuIzquierdo.current.classList.remove('desplieguaMenuIzquierdo')
+        menuIzquierdoResponsive.current.classList.remove('desplieguaMenuIzquierdo')
     }
-    useStyles = makeStyles(theme => ({
-        grow: {
-          flexGrow: 1,
-        },
-        menuButton: {
-          marginRight: theme.spacing(2),
-        },
-        title: {
-          display: 'none',
-          [theme.breakpoints.up('sm')]: {
-            display: 'block',
-          },
-        },
-        search: {
-          position: 'relative',
-          borderRadius: theme.shape.borderRadius,
-          backgroundColor: fade(theme.palette.common.white, 0.15),
-          '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
-          },
-          marginRight: theme.spacing(2),
-          marginLeft: 0,
-          width: '100%',
-          [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(3),
-            width: 'auto',
-          },
-        },
-        searchIcon: {
-          width: theme.spacing(7),
-          height: '100%',
-          position: 'absolute',
-          pointerEvents: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-        inputRoot: {
-          color: 'inherit',
-        },
-        inputInput: {
-          padding: theme.spacing(1, 1, 1, 7),
-          transition: theme.transitions.create('width'),
-          width: '100%',
-          [theme.breakpoints.up('md')]: {
-            width: 200,
-          },
-        },
-        sectionDesktop: {
-          display: 'none',
-          [theme.breakpoints.up('md')]: {
-            display: 'flex',
-          },
-        },
-        sectionMobile: {
-          display: 'flex',
-          [theme.breakpoints.up('md')]: {
-            display: 'none',
-          },
-        },
-      }))
-    handleProfileMenuOpen = event => {
-        this.setState({setAnchorEl:event.currentTarget})
-    };
-
-    handleMobileMenuClose = () => {
-        this.setState({setMobileMoreAnchorEl:false})
-    };
-
-    handleMenuClose = () => {
-        this.setState({setAnchorEl:false})
-        this.handleMobileMenuClose();
-    };
-
-    handleMobileMenuOpen = event => {
-        this.setState({setMobileMoreAnchorEl:event.currentTarget})
-    };
-
-    
-    render() {
-        const classes = this.useStyles
-        const isMenuOpen = Boolean(this.state.anchorEl);
-        const isMobileMenuOpen = Boolean(this.state.mobileMoreAnchorEl)
-        const menuId = 'primary-search-account-menu'
-
-        const mobileMenuId = 'primary-search-account-menu-mobile'
-        const renderMenu = (
-            <Menu
-                anchorEl={this.state.anchorEl}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                id={menuId}
-                keepMounted
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={isMenuOpen}
-                onClose={this.handleMenuClose}
-            >
-            <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
-            </Menu>
-        )
-        const renderMobileMenu = ( 
-        <Menu
-            anchorEl={this.state.mobileMoreAnchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            open={isMobileMenuOpen}
-            onClose={this.handleMobileMenuClose}
-        >
-            <MenuItem>
-                <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                    <MailIcon />
-                </Badge>
-                </IconButton>
-                <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton aria-label="show 11 new notifications" color="inherit">
-                <Badge badgeContent={11} color="secondary">
-                    <NotificationsIcon />
-                </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem>
-            <MenuItem onClick={this.handleProfileMenuOpen}>
-                <IconButton
-                aria-label="account of current user"
-                aria-controls="primary-search-account-menu"
-                aria-haspopup="true"
-                color="inherit"
-                >
-                <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
-            </Menu>
-        )
-        return (
-            <div id = 'containerMENU' >
-                <div>
-                    <div className={classes.grow}>
-                        <AppBar position="static">
-                        <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="open drawer"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography className={classes.title} variant="h6" noWrap>
-                            Material-UI
-                        </Typography>
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                            <SearchIcon />
-                            </div>
-                            <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </div>
-                        <div className={classes.grow} />
-                        <div className={classes.sectionDesktop}>
-                            <IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                            </IconButton>
-                            <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                            </IconButton>
-                            <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={this.handleProfileMenuOpen}
-                            color="inherit"
-                            >
-                            <AccountCircle />
-                            </IconButton>
-                        </div>
-                        <div className={classes.sectionMobile}>
-                            <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={this.handleMobileMenuOpen}
-                            color="inherit"
-                            >
-                            <MoreIcon />
-                            </IconButton>
-                        </div>
-                        </Toolbar>
-                        </AppBar>
-                        {renderMobileMenu}
-                        {renderMenu}
+    const despliegaMenuIzquierdo = e => {
+        menuIzquierdo.current.classList.add('desplieguaMenuIzquierdo')
+        menu.current.classList.remove('despliegaMenu')
+        menu.current.classList.remove('despliegaMenu')
+    }
+    const escondeMenuIzquierdo = e => {
+        menuIzquierdo.current.classList.remove('desplieguaMenuIzquierdo')
+    }
+    const despliegaMenuIzquierdoResponsive = e => {
+        menuIzquierdoResponsive.current.classList.add('desplieguaMenuIzquierdo')
+        menu.current.classList.remove('despliegaMenu')
+    }
+    const escondeMenuIzquierdoResponsive = e => {
+        menuIzquierdoResponsive.current.classList.remove('desplieguaMenuIzquierdo')
+    }
+    const escondeMenu = e=>{
+        menu.current.classList.remove('despliegaMenu')
+    }
+    return(
+        <div className="containerM" onTouchMove={escondeMenu} >
+            <div className="containerM__menu" >
+            <nav>
+                <ul>
+                    <li onClick={ e=> {
+                        history.push(`/management/produccion`)
+                        escondeMenu()
+                    }} >
+                        <PermDataSettingIcon/>
+                        <a>Produccion</a>
+                    </li>
+                    <li onClick={ e=> {
+                        history.push(`/management/compras`)
+                        escondeMenu()
+                    }}>
+                        <ShoppingCartIcon/>
+                        <a>Compras</a>
+                    </li>
+                    <li>
+                        <ViewQuiltIcon/>
+                        <a onClick={ e=> { history.push(`/management/produccion`) }}  >Matriceria</a>
+                    </li>
+                    <li onClick={ e=> {
+                        history.push(`/management/ingenieria`)
+                        escondeMenu()
+                    }}>
+                        <PermDataSettingIcon/>
+                        <a>Ingenieria</a>
+                    </li>
+                    <li onClick={ e=> {
+                        history.push(`/management/reportes`)
+                        escondeMenu()
+                    }}>
+                        <TimelineIcon/>
+                        <a>Reportes</a>
+                    </li>
+                </ul>
+            </nav>
+            <div className='containerM__menu__container-menu-izquierdo'>
+                <div onClick={despliegaMenuIzquierdo} className='containerM__menu__container-menu-izquierdo__boton'>
+                    <MoreVertIcon/>
+                </div>
+                <div onMouseLeave ={escondeMenuIzquierdo} ref={menuIzquierdo} className='containerM__menu__container-menu-izquierdo__menu'>
+                    <div className='container-avatar'>
+                        <img src={avatar}/>
+                    </div>
+                    <div className='containerM__menu__container-menu-izquierdo__menu__usuario'>
+                        <p>{`Welcome ${usuario.userName} !`}</p>
+                        <p>Perfil: { usuario.perfil }</p>
+                        <p>Nombre: { usuario.nombre }</p>
+                        <p>Apellido: { usuario.apellido }</p>
+                        <p>E-mail: { usuario.email }</p>
+                    </div>
+                    <div className='containerM__menu__container-menu-izquierdo__menu__menu'>
+                        <nav>
+                            <ul>
+                                <li onClick={ e=> {
+                                    history.push(`/management/usuarios`)
+                                    escondeMenuIzquierdo()
+                                }} >
+                                    <SupervisorAccountIcon/>
+                                    <a>Management user</a>
+                                </li>
+                                <li onClick={ e=> {
+                                    history.push(`/management/compras`)
+                                    escondeMenuIzquierdo()
+                                }} >
+                                    <ShoppingCartIcon/>
+                                    <a>Cerra Sesion</a>
+                                </li>
+                                <li>
+                                    <ViewQuiltIcon/>
+                                    <a onClick={ e=> { history.push(`/management/produccion`) }}  >About</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
-                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                    <Navbar.Brand href="#" onClick={e=>{this.props.history.push('/home')}}>Index</Navbar.Brand>
-                    <Navbar.Brand href="#" onClick={e=>{this.props.history.push('/home/produccion')}}>Produccion</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="mr-auto">
-                            <NavDropdown title="Produccion" id="collasible-nav-dropdown">
-                                <NavDropdown.Item onClick={e=>{this.props.history.push('/home')}} >Planillas</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                        <Nav   id='DropdownContainerMenuUser'>
-                            <ButtonToolbar>
-                                <SplitButton
-                                    drop='left'
-                                    variant="secondary"
-                                    title='Management User'
-                                    id='dropdown-button-drop-left'
-                                >
-                                    <div id='containerTargetUser'>
-                                        {
-                                            this.props.user.userName?
-                                            <div>
-                                                <Card id='targetaUser'  style={{ width: '250px',height:'auto'}}>
-                                                    <Card.Img variant="top" src={logo} />
-                                                    <Card.Body>
-                                                        <Card.Title>Welcome {this.props.user.userName} !</Card.Title>
-                                                        <Card.Text>
-                                                            <span id='bodytargetaUser'>
-                                                                <span id='listaUser'>
-                                                                    <li>Perfil: {this.props.user.perfil}</li>
-                                                                    <li>Nombre: {this.props.user.nombre}</li>
-                                                                    <li>apellido: {this.props.user.apellido}</li>
-                                                                </span>
-                                                            </span>
-                                                        </Card.Text>
-                                                    </Card.Body>
-                                                </Card>
-                                            </div>:
-                                            <div></div>
-                                        }
-                                    </div>
-                                    <Dropdown.Item
-                                        onClick={e=>{this.props.history.push(`/home/usuarios`)}}
-                                        eventKey="2"
-                                    >
-                                        Management User
-                                    </Dropdown.Item>
-                                    <Dropdown.Item eventKey="3">Something else here</Dropdown.Item>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item id='btn_cerrarSesion' eventKey="4">Cerrar Sesion</Dropdown.Item>
-                                </SplitButton>
-                            </ButtonToolbar>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
             </div>
-        );
-    }
+            </div>
+            <div className="containerM__menu-responsive">
+                <div className="containerM__menu-responsive__boton" onClick={ despliegaMenu }>
+                    <MenuIcon  />
+                </div>
+                <div onMouseLeave={escondeMenu} ref={menu} className="containerM__menu-responsive__sub-menu">
+                    <nav>
+                        <ul>
+                            <li onClick={ e=> { history.push(`/management/produccion`) }} >
+                                <PermDataSettingIcon/>
+                                <a onClick={ e=> { history.push(`/management/produccion`) }}>Produccion</a>
+                            </li>
+                            <li onClick={ e=> { history.push(`/management/compras`) }} >
+                                <ShoppingCartIcon/>
+                                <a onClick={ e=> { history.push(`/compras`) }}>Compras</a>
+                            </li>
+                            <li>
+                                <ViewQuiltIcon/>
+                                <a onClick={ e=> { history.push(`/management/produccion`) }}  >Matriceria</a>
+                            </li>
+                            <li onClick={ e=> { history.push(`/management/ingenieria`) }}>
+                                <PermDataSettingIcon/>
+                                <a onClick={ e=> { history.push(`/management/ingenieria`) }} >Ingenieria</a>
+                            </li>
+                            <li onClick={ e=> { history.push(`/management/reportes`) }}>
+                                <TimelineIcon/>
+                                <a onClick={ e=> { history.push(`/management/reportes`) }} >Reportes</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div className='containerM__menu__container-menu-izquierdo'>
+                    <div onClick={despliegaMenuIzquierdoResponsive} className='containerM__menu__container-menu-izquierdo__boton'>
+                        <MoreVertIcon/>
+                    </div>
+                    <div onMouseLeave ={escondeMenuIzquierdoResponsive} ref={menuIzquierdoResponsive} className='containerM__menu__container-menu-izquierdo__menu'>
+                        <div className='container-avatar'>
+                            <img src={avatar}/>
+                        </div>
+                        <div className='containerM__menu__container-menu-izquierdo__menu__usuario'>
+                            <p>{`Welcome ${usuario.userName} !`}</p>
+                            <p>Perfil: { usuario.perfil }</p>
+                            <p>Nombre: { usuario.nombre }</p>
+                            <p>Apellido: { usuario.apellido }</p>
+                            <p>E-mail: { usuario.email }</p>
+                        </div>
+                        <div className='containerM__menu__container-menu-izquierdo__menu__menu'>
+                            <nav>
+                                <ul>
+                                    <li onClick={ e=> {
+                                        history.push(`/management/usuarios`)
+                                        escondeMenuIzquierdo()
+                                    }} >
+                                        <SupervisorAccountIcon/>
+                                        <a>Management user</a>
+                                    </li>
+                                    <li onClick={ e=> {
+                                        history.push(`/management/compras`)
+                                        escondeMenuIzquierdo()
+                                    }} >
+                                        <ShoppingCartIcon/>
+                                        <a>Cerra Sesion</a>
+                                    </li>
+                                    <li>
+                                        <ViewQuiltIcon/>
+                                        <a onClick={ e=> { history.push(`/management/produccion`) }}  >About</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 }
-
-export default withRouter(Menu2);
+export default Menu

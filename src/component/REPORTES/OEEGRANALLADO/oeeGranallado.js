@@ -15,7 +15,7 @@ const OeeGranallado = ( props ) => {
     const [idMaquina , setIdMaquina] = useState ( '' )
     const [idPieza , setIdPieza] = useState ( '' )
     const [idMolde , setIdMolde] = useState ( '' )
-    const [fechaProduccionDesde , setFechaProduccionDesde] = useState ( new Moment ( new Date (  ) ).add (  -1 , 'months').format ( 'YYYY-MM-DDTHH:MM:ss.sss' ) )
+    const [fechaProduccionDesde , setFechaProduccionDesde] = useState ( new Moment ( new Date (  ) ).add (  -6 , 'months').format ( 'YYYY-MM-DDTHH:MM:ss.sss' ) )
     const [fechaProduccionHasta , setFechaProduccionHasta] = useState ( new Date (  ) )
     const [vecMaquinas , setVecMaquinas] = useState ( '' )
     const [vecPiezas , setVecPiezas] = useState ( '' )
@@ -26,6 +26,14 @@ const OeeGranallado = ( props ) => {
     const [bandera , setBandera] = useState ( true )
     const abortController = new AbortController()
     useEffect ( (  ) => {
+        setLoading ( true )
+            Servicios.listaOeeGranallado (  idMaquina === '' ? null : idMaquina ,
+            idPieza === '' ? null : idPieza ,  idMolde === '' ? null : idMolde , fechaProduccionDesde , fechaProduccionHasta , idAgrupar , abortController , vec => {
+                if(Array.isArray(vec)) {
+                    setVecDatosOee(vec)
+                    setLoading(false)
+                }
+            }  )
         Servicios.listaMaquinas ( abortController , vec => {
             vec.unshift ( { idMaquina : '' , nombreMaquina : 'NONE' , idTipoMaquina : 1 } )
             if ( vec) {  setVecMaquinas ( vec.filter ( mq => mq.idTipoMaquina === 1 ) )  }
@@ -34,12 +42,14 @@ const OeeGranallado = ( props ) => {
             vec.unshift ( { idPieza : '' , nombrePieza : 'NONE' } )
             if ( vec) {  setVecPiezas ( vec )  }
         } )
+        return () => abortController.abort()
     }  , [ props ]  )
     useEffect ( (  ) => {
-            Servicios.listaMoldes ( idPieza , abortController , vec => {
-                setIdMolde ( '' )
-                setVecMoldes ( vec )
-            } )
+        Servicios.listaMoldes ( idPieza , abortController , vec => {
+            setIdMolde ( '' )
+            setVecMoldes ( vec )
+        } )
+        return () => abortController.abort()
     } , [ idPieza ] )
     useEffect ( (  ) => {
         setLoading ( true )
@@ -47,6 +57,7 @@ const OeeGranallado = ( props ) => {
             Servicios.listaOeeGranallado (  idMaquina === '' ? null : idMaquina ,
             idPieza === '' ? null : idPieza ,  idMolde === '' ? null : idMolde , fechaProduccionDesde , fechaProduccionHasta , idAgrupar , abortController , vec => {
                 if(Array.isArray(vec)) {
+                    setBandera(false)
                     setVecDatosOee(vec)
                     setLoading(false)
                 }
@@ -68,28 +79,28 @@ const OeeGranallado = ( props ) => {
             setLoading(true)
             var ban = true
             const fe = Fechas.DD_MM_YYYY_a_DataTimePicker(fecha)
-                setIdAgrupar(idFiltro)
-                setFechaProduccionDesde( fe )
-                setFechaProduccionHasta ( fe )
-                setIdMaquina(idMaq)
-                setIdPieza(idPie)
-                if(ban) {
-                    ban = false
-                    Servicios.listaOeeGranallado (
-                        idMaq === '' ? null : idMaq ,
-                        idPie === '' ? null : idPie,
-                        idMol === '' ? null : idMol,
-                        Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
-                        Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
-                        idFiltro ,
-                        abortController ,
-                        vec => {
-                            setVecDatosOee(vec)
-                            setLoading(false)
-                            setIdMolde (idMol)
-                        }
-                    )
-                }
+            setIdAgrupar(idFiltro)
+            setFechaProduccionDesde( fe )
+            setFechaProduccionHasta ( fe )
+            setIdMaquina(idMaq)
+            setIdPieza(idPie)
+            if(ban) {
+                ban = false
+                Servicios.listaOeeGranallado (
+                    idMaq === '' ? null : idMaq ,
+                    idPie === '' ? null : idPie,
+                    idMol === '' ? null : idMol,
+                    Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
+                    Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
+                    idFiltro ,
+                    abortController ,
+                    vec => {
+                        setVecDatosOee(vec)
+                        setLoading(false)
+                        setIdMolde (idMol)
+                    }
+                )
+            }
         }
         else if (idFiltro === 2 ) {
             var semana = undefined
@@ -191,7 +202,7 @@ const OeeGranallado = ( props ) => {
     }
     return (
         <div>
-            <Typography style = { { marginTop : 15 , marginBottom : 20 } }  variant ='h3'>OEE Granallado</Typography>
+            <Typography style = { { marginTop : 15 , marginBottom : 20 } }  variant ='h4'>OEE Granallado</Typography>
             <div>
                 <MyComponent.fecha id = 'fechaDesde' label = 'Fecha Produccion Desde' value = { fechaProduccionDesde } onChange = { e => {setBandera(true); setFechaProduccionDesde ( e )} } />
                 <MyComponent.fecha id = 'fechaHasta' label = 'Fecha Produccion Hasta' value = { fechaProduccionHasta } onChange = { e =>{ setBandera(true); setFechaProduccionHasta ( e )} } />
@@ -201,7 +212,7 @@ const OeeGranallado = ( props ) => {
                 <MyComponent.listaDesplegable label = 'Agrupar' value = { idAgrupar } onChange = { e => {setBandera(true); setIdAgrupar ( e.target.value ) }} array = { vecAgrupar } member = { { valueMember : 'idAgrupar' , displayMember : 'nombreAgrupar' } } />
             </div>
             <div id = 'containerTabla'>
-                <Table responsive >
+                <Table responsive>
                     <thead id = 'cabezera' >
                         <tr style = { { background : '#4141B3' , color : 'white' , boxShadow : '1px 1px  1px grey ' } }>
                             <th >Fecha</th>

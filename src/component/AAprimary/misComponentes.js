@@ -91,7 +91,7 @@ componente.hora = React.forwardRef ( ( props , ref ) => {
 componente.numero = React.forwardRef ( ( props , ref ) => {
     return ( <TextField
         ref = { ref }
-        style = { { width : '105px' , marginRight : '10px' } }
+        style = { props.style? props.style :{ width : '105px' , marginRight : '10px' } }
         id = { props.id ? props.id : 'txt_number' }
         type = 'number'
         label = { props.label ? props.label : 'label' }

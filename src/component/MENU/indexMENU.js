@@ -1,7 +1,7 @@
 import React from 'react'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import Menu from './MENU2'
+import Menu2 from './MENU'
 import './styleMENU.css'
 
 class indexMENU extends React.Component {
@@ -9,10 +9,10 @@ class indexMENU extends React.Component {
         super(props);
         this.state = {};
     }
-    render() { 
+    render() {
         return (
-            <div >
-                <Menu user={this.props.UsuarioLOGIN}  />
+            <div>
+                <Menu2/>
             </div>
         );
     }

@@ -1,94 +1,81 @@
 .contenedor *{
+box-sizing: border-box;
+}
+.container-main{
+    padding: 20px;
+}
+.container-header{
+    padding-bottom: 20px;
+}
+.container-header__container-fecha{
+    padding-bottom: 20px;
+}
+.container-operarios{
+    border: solid 1px #303F9F;
+    padding: 15px;
+    border-radius: 7px;
+    margin: 10px;
+}
+.container-operarios__operario{
+    border: solid 1px #303F9F;
+    padding: 15px;
+    border-radius: 7px;
+    margin: 10px;
+}
+.container-operarios__operario__btn-delete{
+    text-align: right;
+}
+.container-operarios__operario__elements{
 
 }
-#PlanillaProduccion{
-    border-bottom: 25px;
+.container-operarios__operario__elements__btn-addRechazo{
     text-align: center;
+    margin: 20px;
+    transition: transform 0.5s;
 }
-.contenedorRechazos > *{
-    margin-right: 10px;
-    display: inline-block;
+.container-operarios__operario__elements__btn-addRechazo:hover{
+    transform: scale(2);
 }
-.contenedorRechazos{
-    
-    margin-right:20px;
-    padding: 0px;
-    box-sizing: border-box;
-    display: inline-block;
-}
-.tipoRechazo{
-    width: 30px;
-    height: 30px;
-}
-.contenedorFormZonas > *{
-display: inline-block;
-margin-left: 10px;
-}
-.contenedorRechazosYzonas{
-display: inline-block;
-border-radius: 7px;
-border: solid grey 1px;
-padding: 10px;
-box-sizing: border-box;
-width: auto;
-margin-right: 10px;
-}
-/* .Scrap{
-    display: inline-block;
-    box-sizing: border-box;
-    width: 48%;
-}
-.Rechazo{
-    display: inline-block;
-    box-sizing: border-box;
-    width: 48%;
-} */
-.contenedorFormZonas .zona{
-    width: 60px;
-}
-.contenedorFormZonas{
-    margin-left: 0px;
-    margin-right: 0px;
-    width: auto;
-}
-.contenedorParadasMaquina{
+.container-operarios__operario__rechazos{
+    border: solid 1px #303F9F;
+    padding: 15px;
     border-radius: 7px;
-    margin: 0px;
-    padding: 10px;
-    /* width: 100%; */
+    margin: 10px;
 }
-.contenedorFechas >*{
-    display: inline-block;
-    margin-right: 10px;
+.MuiFormControl-root.MuiTextField-root [name~="idRe"]{
+    width: 50px !important;
 }
-.contenedorOperarios{
-    /* width: 100%; */
+.container-operarios__operario__rechazos__btn-deleteRechazo{
+    text-align: right;
 }
-.contenedorFormPardasMaquina >*{
-    display: inline-block;
-    margin-right: 10px;
-    margin-bottom: 30px;
+
+.container-tablaPM{
+    height: 100%;
 }
 #h6Alert{
     display: inline-block;
-}
-#contenedorOperaio >*{
-    display: inline-block;
-    float: left;
-   
-}
-#contenedorOperaio{
-    box-sizing: border-box;
-    width: 100%;
-    padding: 20px;
-}
-.contenedorRechazo{
-    display: inline-block;
-    box-sizing: border-box;
-    width: 48%;
 }
 td , th , thead {
     text-align: center;
     margin-top: auto;
     margin-bottom: auto;
+}
+.makeStyles-button-310{
+    width: 100%;
+    padding: 20px !important;
+}
+@media screen and (max-width:375px){
+    .MuiFormControl-root{
+        width: 100% !important;
+        margin-bottom: 20px;
+    }
+    input{
+        width: 100% !important;
+    }
+    .MuiFormControl-root.makeStyles-formControl-153{
+margin: 0px;
+    }
+    .MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-formControl.MuiInput-formControl{
+        width: 100% !important;
+    }
 }
