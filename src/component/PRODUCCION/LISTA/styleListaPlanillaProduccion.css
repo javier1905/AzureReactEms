@@ -21,7 +21,7 @@ flex-shrink: 0.5;
     overflow: auto;
 }
 
-@media screen and (max-width:375px){
+@media screen and (max-width:414px){
     .containerFilter .MuiFormControl-root, .MuiTextField-root{
         width: 100% !important;
     }

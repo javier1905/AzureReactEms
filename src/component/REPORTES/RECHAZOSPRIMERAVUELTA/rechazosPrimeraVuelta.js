@@ -6,7 +6,6 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 import servicios from '../serviceReportes'
 import Moment from 'moment'
 
-
 const RechazosPrimeraVuelta = ( props ) => {
     const [fechaFundicionDesde , setFechaFundicionDesde] = useState ( new Moment (`${new Date (  ).getFullYear (  )}-01-01T00:00:00.000`).format ( 'YYYY-MM-DDTHH:MM:ss.sss' ) )
     const [fechaFundicionHasta , setFechaFundicionHasta] = useState ( new Date () )
@@ -21,34 +20,28 @@ const RechazosPrimeraVuelta = ( props ) => {
     const [vecRechazos , setVecRechazos] = useState ( [  ] )
     const [vecPorcentajes , setVecPorcentajes] = useState ( [  ] )
     const refGrafico = useRef (  )
+    const abortController = new AbortController()
     useEffect ( (  ) => {
-        const getServicios = async (  ) => {
-            const vecMaq = await Servicios.listaMaquinas (  )
-            const vecPie = await Servicios.listaPiezas (  )
-            if ( vecMaq ) { setVecMaquinas ( vecMaq ) }
-            if ( vecPie ) { setVecPiezas ( vecPie ) }
-        }
-        getServicios (  )
+        Servicios.listaMaquinas ( abortController , vec => setVecMaquinas(vec) )
+        Servicios.listaPiezas ( abortController , vec => setVecPiezas(vec) )
         try { refGrafico.plugins.unregister ( ChartDataLabels ) } catch ( e ) {  }
+        return () => abortController.abort()
     } , [props] )
     useEffect ( (  ) => {
-        const getMol = async (  ) => {
-            const vecMol = await Servicios.listaMoldes ( idPieza )
-            if ( vecMol ) { setVecMoldes ( vecMol ) }
-        }
-        getMol (  )
+        Servicios.listaMoldes ( idPieza , abortController , vec =>  setVecMoldes(vec) )
+        return () => abortController.abort()
     } , [ idPieza ] )
     useEffect ( (  ) => {
-        const getDatosRechazos = async (  ) => {
-            const result = await servicios.listaReporteRechazosPrimeraVuelta ( fechaFundicionDesde , fechaFundicionHasta , idMaquina === '' ? null : idMaquina , idPieza === '' ? null : idPieza , idMolde === '' ? null : idMolde )
-            if ( result  ) {
-                setVecFechas ( result.vecFechas )
-                setVecProduccion ( result.vecProduccion )
-                setVecRechazos ( result.vecRechazos )
-                setVecPorcentajes ( result.vecPorcentaje )
+        servicios.listaReporteRechazosPrimeraVuelta ( fechaFundicionDesde , fechaFundicionHasta ,
+            idMaquina === '' ? null : idMaquina , idPieza === '' ? null : idPieza ,
+            idMolde === '' ? null : idMolde , abortController , (vecFechas , vecProduccion , vecRechazos , vecPorcentaje) => {
+                setVecFechas ( vecFechas )
+                setVecProduccion ( vecProduccion )
+                setVecRechazos ( vecRechazos )
+                setVecPorcentajes ( vecPorcentaje )
             }
-        }
-        getDatosRechazos (  )
+        )
+        return () => abortController.abort()
     } , [fechaFundicionDesde , fechaFundicionHasta , idMaquina , idPieza , idMolde] )
     const datos = {
         labels : vecFechas ,

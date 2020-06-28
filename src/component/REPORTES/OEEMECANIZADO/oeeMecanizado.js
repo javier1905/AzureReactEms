@@ -23,38 +23,34 @@ const OeeMecanizado = ( props ) => {
     const [loading , setLoading] = useState ( true )
     const [vecDatosOee , setVecDatosOee] = useState ( [  ] )
     const [idAgrupar , setIdAgrupar] = useState( 1 )
+    const abortController = new AbortController()
     useEffect ( (  ) => {
-        const getListas = async (  ) => {
-            const listaMaq = await Servicios.listaMaquinas (  )
-            const listaPie = await Servicios.listaPiezas (  )
-            listaMaq.unshift ( { idMaquina : '' , nombreMaquina : 'NONE' , idTipoMaquina : 1 } )
-            if ( listaMaq) {  setVecMaquinas ( listaMaq.filter ( mq => mq.idTipoMaquina === 4 ) )  }
-            listaPie.unshift ( { idPieza : '' , nombrePieza : 'NONE' } )
-            if ( listaPie) {  setVecPiezas ( listaPie )  }
-        }
-        getListas (  )
+            Servicios.listaMaquinas ( abortController , vec =>{
+                vec.unshift ( { idMaquina : '' , nombreMaquina : 'NONE' , idTipoMaquina : 1 } )
+                setVecMaquinas ( vec.filter ( mq => mq.idTipoMaquina === 4 ) )
+            } )
+            Servicios.listaPiezas ( abortController , vec => {
+                vec.unshift ( { idPieza : '' , nombrePieza : 'NONE' } )
+                setVecPiezas ( vec ) 
+            } )
+            return () => abortController.abort()
     }  , [ props ]  )
     useEffect ( (  ) => {
-        const getMoldes = async (  ) => {
-            const listaMoldes = await  Servicios.listaMoldes ( idPieza )
-            if ( listaMoldes ) {
-                setIdMolde ( '' )
-                setVecMoldes ( listaMoldes )
-            }
-        }
-        getMoldes (  )
+        Servicios.listaMoldes ( idPieza , abortController , vec => {
+            setIdMolde ( '' )
+            setVecMoldes ( vec )
+        } )
+        return () => abortController.abort()
     } , [ idPieza ] )
     useEffect ( (  ) => {
         setLoading ( true )
-        const getListaOee = async (  ) => {
-            const listaOee = await Servicios.listaOeeMecanizado (  idMaquina === '' ? null : idMaquina ,
-            idPieza === '' ? null : idPieza ,  idMolde === '' ? null : idMolde , fechaProduccionDesde , fechaProduccionHasta , idAgrupar  )
-            if(listaOee.vecOeeMecanizado && Array.isArray(listaOee.vecOeeMecanizado)) {
-                setVecDatosOee(listaOee.vecOeeMecanizado)
+            Servicios.listaOeeMecanizado (  idMaquina === '' ? null : idMaquina ,
+            idPieza === '' ? null : idPieza ,  idMolde === '' ? null : idMolde , fechaProduccionDesde ,
+            fechaProduccionHasta , idAgrupar , abortController , vec => {
+                setVecDatosOee(vec)
                 setLoading(false)
-            }
-        }
-        getListaOee (  )
+            }  )
+        return () => abortController.abort()
     }  , [ fechaProduccionDesde , fechaProduccionHasta , idMaquina , idPieza ,  idMolde , idAgrupar ]  )
 
     const vecAgrupar = [
@@ -64,27 +60,28 @@ const OeeMecanizado = ( props ) => {
         { idAgrupar : 4 , nombreAgrupar : 'AÑO'} ,
     ]
     const onClickGrafico = ( fecha , idMaq , idPie , idMol , idFiltro ) => {
-        console.log(fecha , idMaq , idPie , idMol , idFiltro)
         if (idFiltro === 1) {
             setLoading(true)
             var ban = true
             const fe = Fechas.DD_MM_YYYY_a_DataTimePicker(fecha)
-            const getDatosOee = async () => {
+            const getDatosOee =  () => {
                 if(ban) {
                     ban = false
-                const datosOeeMec = await Servicios.listaOeeMecanizado (
-                    idMaq === '' ? null : idMaq ,
-                    idPie === '' ? null : idPie,
-                    idMol === '' ? null : idMol,
-                    Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
-                    Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
-                    idFiltro )
-                if ( datosOeeMec ) {
-                    setVecDatosOee(datosOeeMec.vecOeeMecanizado)
-                    setLoading(false)
-                    setIdMolde (idMol)
+                    Servicios.listaOeeMecanizado (
+                        idMaq === '' ? null : idMaq ,
+                        idPie === '' ? null : idPie,
+                        idMol === '' ? null : idMol,
+                        Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
+                        Fechas.DD_MM_YYYY_a_DataTimePicker(fecha) ,
+                        idFiltro ,
+                        abortController ,
+                        vec => {
+                            setVecDatosOee(vec)
+                            setLoading(false)
+                            setIdMolde (idMol)
+                        }
+                    )
                 }
-            }
             }
                 setIdAgrupar(idFiltro)
                 setFechaProduccionDesde( fe )
@@ -105,33 +102,30 @@ const OeeMecanizado = ( props ) => {
 				anio = parseInt ( String (fecha).substring( 5,9 ) )
 			}
             const feSem = Fechas.numeroSemana_1reFecha_ultimaFecha( semana , anio )
-            console.log(feSem)
             setLoading(true)
             var banSem = true
-            const getDatosOee = async () => {
-                if(banSem) {
-                    banSem = false
-                const datosOeeMec= await Servicios.listaOeeMecanizado (
+            setIdAgrupar(idFiltro)
+            setFechaProduccionDesde( feSem.inicio)
+            setFechaProduccionHasta ( feSem.fin )
+            setIdMaquina(idMaq)
+            setIdPieza(idPie)
+            if(banSem) {
+                banSem = false
+                Servicios.listaOeeMecanizado (
                     idMaq === '' ? null : idMaq ,
                     idPie === '' ? null : idPie,
                     idMol === '' ? null : idMol,
                     feSem.inicio ,
                     feSem.fin ,
-                    idFiltro )
-                if ( datosOeeMec ) {
-                    setVecDatosOee(datosOeeMec.vecOeeMecanizado)
-                    setLoading(false)
-                    setIdMolde (idMol)
-                }
+                    idFiltro ,
+                    abortController ,
+                    vec => {
+                        setVecDatosOee(vec)
+                        setLoading(false)
+                        setIdMolde (idMol)
+                    }
+                )
             }
-            }
-                setIdAgrupar(idFiltro)
-                setFechaProduccionDesde( feSem.inicio)
-                setFechaProduccionHasta ( feSem.fin )
-                setIdMaquina(idMaq)
-                setIdPieza(idPie)
-                getDatosOee()
-
         }
         else if (idFiltro === 3 ) {
             setLoading(true)
@@ -140,29 +134,28 @@ const OeeMecanizado = ( props ) => {
             const anio = parseInt(String(fecha).substring(3,7))
             var desde = `${new Moment({ y: anio, M: mes , d:1 ,	h: 0 ,	m: 0 ,	s:0 , ms : 0 }).format( 'ddd MMM DD YYYY')} 00:00:00 GMT-0300` ;
             var hasta = `${new Moment({y:anio, M:mes , d:1 , h:0,m:0,s:0,ms:0}).endOf('month').format('ddd MMM DD YYYY')} 00:00:00 GMT-0300` ;
-            const getDatosOee = async () => {
-                if(ban3) {
-                    ban3 = false
-                    const datosOeeMec = await Servicios.listaOeeMecanizado (
-                        idMaq === '' ? null : idMaq ,
-                        idPie === '' ? null : idPie,
-                        idMol === '' ? null : idMol,
-                        desde ,
-                        hasta ,
-                        idFiltro )
-                    if ( datosOeeMec ) {
-                        setVecDatosOee(datosOeeMec.vecOeeMecanizado)
+            setIdAgrupar(idFiltro)
+            setFechaProduccionDesde( desde )
+            setFechaProduccionHasta ( hasta )
+            setIdMaquina(idMaq)
+            setIdPieza(idPie)
+            if(ban3) {
+                ban3 = false
+                Servicios.listaOeeMecanizado (
+                    idMaq === '' ? null : idMaq ,
+                    idPie === '' ? null : idPie,
+                    idMol === '' ? null : idMol,
+                    desde ,
+                    hasta ,
+                    idFiltro ,
+                    abortController ,
+                    vec => {
+                        setVecDatosOee(vec)
                         setLoading(false)
                         setIdMolde (idMol)
                     }
-                }
+                )
             }
-                setIdAgrupar(idFiltro)
-                setFechaProduccionDesde( desde )
-                setFechaProduccionHasta ( hasta )
-                setIdMaquina(idMaq)
-                setIdPieza(idPie)
-                getDatosOee()
         }
         else if ( idFiltro === 4 ) {
             setLoading(true)
@@ -170,29 +163,28 @@ const OeeMecanizado = ( props ) => {
 			const a = parseInt ( fecha )
 			var feInicio = `${new Moment( { y: a , M : 0 , d:1 , h:0 , m:0, s:0 } ).format('ddd MMM DD YYYY')} 00:00:00 GMT-0300`
 			var feFin = `${new Moment( { y: a , M : 11 , d:31 , h:0 , m:0, s:0 } ).format('ddd MMM DD YYYY')} 00:00:00 GMT-0300`
-            const getDatosOee = async () => {
-                if(ban4) {
-                    ban4 = false
-                    const datosOeeMec = await Servicios.listaOeeMecanizado (
-                        idMaq === '' ? null : idMaq ,
-                        idPie === '' ? null : idPie,
-                        idMol === '' ? null : idMol,
-                        feInicio ,
-                        feFin ,
-                        idFiltro )
-                    if ( datosOeeMec ) {
-                        setVecDatosOee(datosOeeMec.vecOeeMecanizado)
+            setIdAgrupar(idFiltro)
+            setFechaProduccionDesde( feInicio )
+            setFechaProduccionHasta ( feFin )
+            setIdMaquina(idMaq)
+            setIdPieza(idPie)
+            if(ban4) {
+                ban4 = false
+                Servicios.listaOeeMecanizado (
+                    idMaq === '' ? null : idMaq ,
+                    idPie === '' ? null : idPie,
+                    idMol === '' ? null : idMol,
+                    feInicio ,
+                    feFin ,
+                    idFiltro ,
+                    abortController ,
+                    vec => {
+                        setVecDatosOee(vec)
                         setLoading(false)
                         setIdMolde (idMol)
                     }
-                }
+                )
             }
-                setIdAgrupar(idFiltro)
-                setFechaProduccionDesde( feInicio )
-                setFechaProduccionHasta ( feFin )
-                setIdMaquina(idMaq)
-                setIdPieza(idPie)
-                getDatosOee()
         }
     }
     return (

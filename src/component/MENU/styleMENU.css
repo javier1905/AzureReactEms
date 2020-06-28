@@ -92,14 +92,15 @@ padding: 0px;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.76);
     width: 170px;
     height: 290px;
-    top: 15px;
+    top: -985px;
     left: 15px;
-    z-index: 1000;
+    z-index: 1015;
     border-radius: 5px;
-    display: none;
 }
 .despliegaMenu{
-    display: inline-block;
+    animation-name: despliaguaMenu;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
 }
 .containerM__menu-responsive__sub-menu nav ul{
     list-style: none;
@@ -143,7 +144,6 @@ color: rgb(165, 152, 152);
     z-index: 999;
 }
 .containerM__menu__container-menu-izquierdo__menu{
-    display: none;
     background: #ffffff;
     -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.76);
     -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.76);
@@ -152,11 +152,21 @@ color: rgb(165, 152, 152);
     height: 515px;
     position: absolute;
     border-radius: 5px;
-    top: 2px;
+    top: -1000px;
     right: 2px;
 }
 .desplieguaMenuIzquierdo{
-    display: inline-block;
+    animation-name:despliaguaMenu;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+@keyframes despliaguaMenu {
+    0%{
+        top: -1000px;
+    }
+    100%{
+        transform: translateY(1000px);
+    }
 }
 .container-avatar{
     position: relative;
@@ -182,6 +192,10 @@ color: rgb(165, 152, 152);
     right: 0px;
     margin: auto;
     box-shadow: 0px 0px 29px 6px rgba(0,0,0,0.76);
+}
+.containerM__menu__container-menu-izquierdo__boton:hover{
+    cursor: pointer;
+    color: rgba(128, 128, 128, 0.644);
 }
 .containerM__menu__container-menu-izquierdo__menu__usuario{
     padding: 30px 30px;
@@ -216,13 +230,14 @@ color: rgb(165, 152, 152);
 }
 .containerM__menu__container-menu-izquierdo__menu__menu> nav>ul>li:hover{
     background: rgb(75, 76, 146);
+    cursor: pointer;
 }
 .containerM__menu__container-menu-izquierdo__menu__menu> nav>ul>li:hover >a{
 color: seashell;
 }
 .containerM__menu__container-menu-izquierdo__menu__menu> nav>ul>li:hover >svg{
     color: seashell;
-    }
+}
 @media screen and (max-width:820px){
     .containerM__menu{
         display: none;
@@ -230,9 +245,15 @@ color: seashell;
     .containerM__menu-responsive{
         display: inline-block;
     }
+    .containerM__menu__container-menu-izquierdo__menu__menu> nav>ul>li>a{
+        font-size: 18px;
+    }
+    .containerM__menu__container-menu-izquierdo__menu__menu> nav>ul{
+        padding-left: 0px;
+    }
 }
 
-@media screen and ( max-width:375px){
+@media screen and ( max-width:414px){
     .containerM__menu__container-menu-izquierdo__menu__menu> nav>ul>li>a{
         font-size: 18px;
     }
