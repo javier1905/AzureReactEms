@@ -91,7 +91,7 @@ const Menu = (props) => {
                         <div className='container-avatar'>
                             <img src={avatar}/>
                         </div>
-                        <div className='containerM__menu__container-menu-izquierdo__menu__usuario'>
+                        <div className='containerM__menu__container-menu-izquierdo__menu__usuario'> 
                             <p>{`Welcome ${usuario.userName} !`}</p>
                             <p>Perfil: { usuario.perfil }</p>
                             <p>Nombre: { usuario.nombre }</p>
