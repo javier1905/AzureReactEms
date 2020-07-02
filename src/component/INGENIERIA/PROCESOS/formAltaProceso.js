@@ -45,8 +45,17 @@ const FormProcesos =  ( props ) => {
                 if ( resMaq ) { setVecMaquinas ( resMaq ) ; props.proceso !== undefined && setIdMaquina ( props.proceso.idMaquina )}
                 if ( resTipoPro ) { setVecTiposProceso ( resTipoPro ) ; props.proceso !== undefined && setIdTipoProceso ( props.proceso.idTipoProceso )  }
             }
-            props.proceso !== undefined && setIdProceso ( parseInt ( props.proceso.idProceso ) )
-            props.proceso !== undefined && setDescipcionProceso ( props.proceso.descipcionProceso )
+            if( props.proceso !== undefined   ){
+                setIdProceso ( parseInt ( props.proceso.idProceso ) )
+                setDescipcionProceso ( props.proceso.descipcionProceso )
+            }
+            else{
+                setDescipcionProceso('')
+                setIdPieza('')
+                setIdMaquina('')
+                setIdTipoProceso('')
+                setVecPiezasXhora([ ])
+            }
             if ( props.open ) { props.proceso !== undefined && setVecPiezasXhora ( props.proceso.vecPiezasXhora ) }
         }
         getVecPiezas (  )
@@ -185,7 +194,7 @@ const FormProcesos =  ( props ) => {
         <Dialog fullScreen open = { open } onClose = {  e => props.handleClose (  ) } TransitionComponent = { Transition } >
             <AppBar className = { classes.appBar } >
             <Toolbar>
-                <Typography variant="h2" className = { classes.title } >
+                <Typography variant="h3" className = { classes.title } >
                     Procesos
                 </Typography>
                 <IconButton  edge="start" color="inherit" onClick = {  e => props.handleClose (  ) } aria-label="close">

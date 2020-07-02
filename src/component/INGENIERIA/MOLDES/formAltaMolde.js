@@ -14,6 +14,10 @@ const FormAltaMolde = ( props ) => {
     useEffect ( (  ) => {
         setVecPiezas ( props.vecPiezas )
     } , [ props.vecPiezas ] )
+    useEffect (() => {
+        setNombreMolde('')
+        setIdPieza('')
+    } , [props.limpiaCampos])
 
     const miSubmit = e => {
         if ( nombreMolde === '' || idPieza === '' ) {

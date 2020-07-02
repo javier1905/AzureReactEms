@@ -15,6 +15,7 @@ const ListaOperaciones = ( props ) => {
     const [vecOperaciones , setVecOperaciones] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [operacionSeleccionada , setOperacionSeleccionada] = useState ( true )
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
 
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
@@ -40,16 +41,17 @@ const ListaOperaciones = ( props ) => {
         formAltaOperacion.slideToggle ( )
         setModo ( 'normal' )
         setOperacionSeleccionada ( undefined )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Lista de Operaciones</Typography>
+                <Typography variant = 'h4'>Lista de Operaciones</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add defect' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaOperacion' style = { { display : 'none' } }>
-                    <FromAltaOperacion methodAdd = { methodAdd } actualizaListaOperaciones = { actualizaListaOperaciones } />
+                    <FromAltaOperacion limpiaCampos ={limpiaCampos} methodAdd = { methodAdd } actualizaListaOperaciones = { actualizaListaOperaciones } />
                 </div>
                 <div>
                     <Table>

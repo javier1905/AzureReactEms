@@ -11,6 +11,7 @@ const ListaPiezasXhora = ( props ) => {
   const [vecPiezasXhora , setVecPiezasXhora] = useState ( [  ] )
   const [modo , setModo] = useState ( 'normal' )
   const [myPiezaxhs , setMyPiezaxhs] = useState ( undefined )
+  const [limpiaCampos , setLimpiaCampos] = useState ( true )
 
   useEffect ( (  ) => {
     setLoading ( false )
@@ -28,6 +29,7 @@ const ListaPiezasXhora = ( props ) => {
     setModo ( 'normal' )
     var formAltaPiezaXhora = $('#formAltaPiezaXhora2')
     formAltaPiezaXhora.slideToggle (  )
+    setLimpiaCampos(!limpiaCampos)
   }
   return (
     <div style = { { marginTop : 30  } }>
@@ -35,7 +37,7 @@ const ListaPiezasXhora = ( props ) => {
         <MyComponent.botonAdd texto = 'add time' onClick = { showFormAltaPiezaXhora } />
       </div>
       <div id='formAltaPiezaXhora2' style = { { display : 'none' } }>
-        <FormAltaPiezaXhora showFormAltaPiezaXhora = { showFormAltaPiezaXhora }  piezaXhora = { vecPiezasXhora[vecPiezasXhora.length-1] ? vecPiezasXhora[vecPiezasXhora.length-1] : undefined }  MethodInsertPiezaXhora = { props.MethodInsertPiezaXhora } />
+        <FormAltaPiezaXhora limpiaCampos = {limpiaCampos} showFormAltaPiezaXhora = { showFormAltaPiezaXhora }  piezaXhora = { vecPiezasXhora[vecPiezasXhora.length-1] ? vecPiezasXhora[vecPiezasXhora.length-1] : undefined }  MethodInsertPiezaXhora = { props.MethodInsertPiezaXhora } />
       </div>
       <Table>
         <thead>

@@ -16,6 +16,7 @@ const ListaDefectos = ( props ) => {
     const [vecOperaciones , setVecOperaciones] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [defectoSeleccionado , setDefectoSeleccionado] = useState ( true )
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
 
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
@@ -45,16 +46,17 @@ const ListaDefectos = ( props ) => {
         formAltaDefecto.slideToggle ( )
         setModo ( 'normal' )
         setDefectoSeleccionado ( undefined )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Lista de Defectos</Typography>
+                <Typography variant = 'h4'>Lista de Defectos</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add defect' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaDefecto' style = { { display : 'none' } }>
-                    <FromAltaDefecto methodAdd = { methodAdd } actualizaListaDefectos = { actualizaListaDefectos } vecOperaciones = { vecOperaciones } />
+                    <FromAltaDefecto limpiaCampos = {limpiaCampos} methodAdd = { methodAdd } actualizaListaDefectos = { actualizaListaDefectos } vecOperaciones = { vecOperaciones } />
                 </div>
                 <div>
                     <Table>

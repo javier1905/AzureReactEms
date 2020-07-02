@@ -18,7 +18,12 @@ const FormAltaMaquina = ( props ) => {
         setVecTiposMaquina ( props.vecTiposMaquina )
         setVecPlantas ( props.vecPlantas )
     } , [ props.vecTiposMaquina , props.vecPlantas ] )
-
+    useEffect ( ()=> {
+        setNombreMaquina('')
+        setDescripcionMaquina('')
+        setIdTipoMaquina('')
+        setIdPlanta('')
+    } , [props.limpiaCampos])
     const miSubmit = e => {
         if ( nombreMaquina === '' || descripcionMaquina === '' ) {
             var myAlert2 = $( '#myAlert2' )

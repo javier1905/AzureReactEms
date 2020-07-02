@@ -55,7 +55,7 @@ const ListaProcesos= (  ) => {
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Listado Procesos</Typography>
+                <Typography variant = 'h4'>Listado Procesos</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 60 } texto = 'Add proceso'  onClick = { e => setOpen ( true ) } />
                     <FormProceso actualizaLista =  { actualizaLista } proceso = { undefined } handleClose = { handleClose } open = { open } />

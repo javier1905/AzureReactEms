@@ -15,7 +15,7 @@ const ListaPlantas = ( props ) => {
     const [vecPlantas , setVecPlantas] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [plantaSeleccionada , setPlantaSeleccionada] = useState ( true )
-
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
             const vecPla= await Servicios.listaPlantas (  )
@@ -40,6 +40,7 @@ const ListaPlantas = ( props ) => {
         formAltaPlanta.slideToggle ( )
         setModo ( 'normal' )
         setPlantaSeleccionada ( undefined )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
         <div>
@@ -49,7 +50,7 @@ const ListaPlantas = ( props ) => {
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add planta' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaPlanta' style = { { display : 'none' } }>
-                    <FormAltaPlanta methodAdd = { methodAdd } actualizaListaPlantas = { actualizaListaPlantas } />
+                    <FormAltaPlanta limpiaCampos = {limpiaCampos} methodAdd = { methodAdd } actualizaListaPlantas = { actualizaListaPlantas } />
                 </div>
                 <div>
                     <Table>

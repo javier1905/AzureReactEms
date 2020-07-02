@@ -315,6 +315,7 @@ componente.botonSave = React.forwardRef ( ( props , ref ) => {
     return (
     <Tooltip title = { props.texto ? props.texto : "Save"}>
         <Button
+            id = {props.id? props.id : `btn_save${Math.random()}`}
             style = { props.style }
             variant = "contained"
             color = "primary"

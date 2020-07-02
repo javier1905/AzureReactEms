@@ -1876,5 +1876,60 @@ servicios.listaReporteRechazosPrimeraVuelta =  ( fechaFundicionDesde , fechaFund
         })
     } ) ( )
 }
-
+servicios.listaRechazosXpieza = ( fechaFundicionDesde , fechaFundicionHasta , idMaquina , idPieza , idMolde , abortController , callback ) => {
+    var cont = 0
+    var cont2 = 0
+    const myFetch = () => {
+        fetch(`${urlApi}/api/reportes/rechazosXpieza` , {
+            method:'POST' ,
+            body : JSON.stringify({ fechaFundicionDesde , fechaFundicionHasta , idMaquina , idPieza , idMolde }) ,
+            headers : new Headers ({
+                'Accept' : 'Application/json' ,
+                'Content-Type' : 'Application/json' ,
+                authorization : `Bearer ${sessionStorage.getItem('token')}`
+            }) ,
+            signal : abortController.signal
+        })
+        .then(result => result.json())
+        .then(json => {
+            if(Array.isArray(json)){
+                var vecPiezas = []
+                var vecProduccion = []
+                var vecRechazos = []
+                var vecProcentages = []
+                json.forEach(e => {
+                    vecPiezas.push(e.nombrePieza)
+                    vecProduccion.push(e.produccion)
+                    vecRechazos.push(e.rechazos)
+                    if(e.produccion === 0 || e.produccion === null ){
+                        vecProcentages.push( 0 )
+                    }
+                    else {
+                        vecProcentages.push( parseFloat((e.rechazos / e.produccion)*100).toFixed(2) )
+                    }
+                    
+                })
+                callback(vecPiezas ,vecProduccion , vecRechazos , vecProcentages)
+            }
+            else{
+                cont ++
+                if(cont <4 ){
+                    myFetch()
+                }
+            }
+        })
+        .catch( e => {
+            if(e.name === 'AbortError'){
+                abortController.abort()
+            }
+            else{
+                cont2 ++
+                if(cont2 < 4){
+                    myFetch()
+                }
+            }
+        })
+    }
+    myFetch()
+}
 export default servicios

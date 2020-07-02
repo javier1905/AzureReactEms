@@ -16,6 +16,7 @@ const ListaParadasMaquina = ( props ) => {
     const [vecAreas , setVecAreas] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [paradaMaquinaSeleccionada , setParadaMaquinaSeleccionada] = useState ( true )
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
 
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
@@ -45,16 +46,17 @@ const ListaParadasMaquina = ( props ) => {
         formAltaParadaMaquina.slideToggle ( )
         setModo ( 'normal' )
         setParadaMaquinaSeleccionada ( undefined )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Lista de Paradas de Maquina</Typography>
+                <Typography variant = 'h4'>Lista de Paradas de Maquina</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add parada maquina' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaParadaMaquina' style = { { display : 'none' } }>
-                    <FromAltaParadaMaquina methodAdd = { methodAdd } actualizaListaParadasMaquina = { actualizaListaParadasMaquina } vecAreas = { vecAreas } />
+                    <FromAltaParadaMaquina limpiaCampos={limpiaCampos}  methodAdd = { methodAdd } actualizaListaParadasMaquina = { actualizaListaParadasMaquina } vecAreas = { vecAreas } />
                 </div>
                 <div>
                     <Table>

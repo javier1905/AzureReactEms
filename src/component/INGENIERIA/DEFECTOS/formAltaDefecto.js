@@ -14,6 +14,10 @@ const FormAltaDefecto = ( props ) => {
     useEffect ( (  ) => {
         setVecOperaciones ( props.vecOperaciones )
     } , [ props.vecOperaciones ] )
+    useEffect( () => {
+        setNombreDefecto('')
+        setIdOperacion('')
+    } , [props.limpiaCampos])
 
     const miSubmit = e => {
         if ( nombreDefecto === '' || idOperacion === '' ) {

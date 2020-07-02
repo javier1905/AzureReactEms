@@ -54,7 +54,7 @@ const ListaPiezas = ( props ) => {
     }
     return (
         <div>
-            <Typography variant = 'h1'>Listado Piezas</Typography>
+            <Typography variant = 'h4'>Listado Piezas</Typography>
             <MyComponent.botonAdd texto = 'Add Pieza' onClick = { addPieza } fontSize = 'large' size = { 60  } />
             <div className = 'altaPiezas'>
                 <div style = { { display : 'none' } } id = 'formAltaPi' >

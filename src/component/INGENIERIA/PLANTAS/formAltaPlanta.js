@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import MyComponent from '../../AAprimary/misComponentes'
 import { Alert } from 'react-bootstrap'
@@ -12,6 +12,13 @@ const FormAltaPlanta = ( props ) => {
     const [codigoPostalPlanta , setCodigoPostalPlanta] = useState ( '' )
     const [callePlanta , setCallePlanta] = useState ( '' )
     const [alturaCallePlanta , setAlturaCallePlanta] = useState ( '' )
+    useEffect ( ()=> {
+        setNombrePlanta('')
+        setBarrioPlanta('')
+        setCodigoPostalPlanta('')
+        setCallePlanta('')
+        setAlturaCallePlanta('')
+    } , [props.limpiaCampos])
     const miSubmit = e => {
         if ( nombrePlanta === '' ||  barrioPlanta === ''  || codigoPostalPlanta === '' || callePlanta === '' || alturaCallePlanta === ''  ) {
             var myAlert2 = $( '#myAlert2' )

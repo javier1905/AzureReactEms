@@ -231,9 +231,9 @@ class AltaPlanillaPRODUCCION extends React.Component {
         var letra,numero,cantidad,idZona;
         var cacheVecOperario = this.state.vecOperarios
         try{
-            letra = String(txt_letra.value).toLocaleUpperCase();
-            numero = txt_numero.value
-            cantidad = txt_cantidad.value
+            letra = String(txt_letra.value).toLocaleUpperCase()
+            numero = parseInt ( txt_numero.value )
+            cantidad = parseInt ( txt_cantidad.value )
             idZona = 0
             var vecZONA = cacheVecOperario[indexOperario].vecRechazo[indexRechazo].vecZonas
             if(vecZONA.length === 0){
@@ -242,9 +242,9 @@ class AltaPlanillaPRODUCCION extends React.Component {
                 this.setState({vecOperarios:cacheVecOperario})
             }
             else{
-                if(vecZONA.find(z=>(z.letra === letra && z.numero === numero))){
-                    if(vecZONA.find(z=>z.numero === numero)){
-                        var indexZona = vecZONA.findIndex(z => (z.letra === letra && z.numero === numero) )
+                if( vecZONA.find ( z=>( z.letra === letra && parseInt ( z.numero ) === numero))){
+                    if ( vecZONA.find ( z=> parseInt ( z.numero ) === numero ) ) {
+                        var indexZona = vecZONA.findIndex(z => (z.letra === letra && parseInt ( z.numero ) === numero) )
                         cacheVecOperario[indexOperario].vecRechazo[indexRechazo].vecZonas[indexZona].cantidad = parseInt(cacheVecOperario[indexOperario].vecRechazo[indexRechazo].vecZonas[indexZona].cantidad)+parseInt(cantidad)
                         this.setState({vecOperarios:cacheVecOperario})
                     }
@@ -973,29 +973,35 @@ class AltaPlanillaPRODUCCION extends React.Component {
                                                                         </div>
                                                                         <div className="container-zonas">
                                                                             <TextField
+                                                                                className = 'txts_zonas'
                                                                                 label='Letra'
                                                                                 id={`letraZona ${i} ${indexRechazo}`}
                                                                                 type='text'
                                                                             >
                                                                             </TextField>
                                                                             <TextField
+                                                                                className = 'txts_zonas'
                                                                                 label='Num'
                                                                                 id={`numeroZona ${i} ${indexRechazo}`}
                                                                                 type='number'
                                                                             >
                                                                             </TextField>
                                                                             <TextField
+                                                                                className = 'txts_zonas'
                                                                                 label='Cant'
                                                                                 id={`cantidadZona ${i} ${indexRechazo}`}
                                                                                 type='number'
                                                                             >
                                                                             </TextField>
-                                                                            <MyComponent.botonAdd
-                                                                                texto = 'Add Zona'
-                                                                                info = {`btnAddZona ${i} ${indexRechazo}`}
-                                                                                onClick = {this.addZona }
-                                                                                id={`btnAddZona ${i} ${indexRechazo}`}
-                                                                            />
+                                                                            <div className='container-btn_zonas'>
+                                                                                <MyComponent.botonAdd
+                                                                                    texto = 'Add Zona'
+                                                                                    className = 'btn_addZona'
+                                                                                    info = {`btnAddZona ${i} ${indexRechazo}`}
+                                                                                    onClick = {this.addZona }
+                                                                                    id={`btnAddZona ${i} ${indexRechazo}`}
+                                                                                />
+                                                                            </div>
                                                                             <Alert id={`alert ${i} ${indexRechazo}`} style={{display:'none'}} severity="error">
                                                                                 {this.state.mensajeAlertZona}
                                                                             </Alert>
@@ -1171,7 +1177,7 @@ class AltaPlanillaPRODUCCION extends React.Component {
                             </div>
                     </div>
                     <div>
-                        <MyComponent.botonSave/>
+                        <MyComponent.botonSave id ='btn_save-planillaProduccion'/>
                     </div>
                 </Form>
             </div>

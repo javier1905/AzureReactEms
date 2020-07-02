@@ -16,13 +16,13 @@ const ListaClientes = ( props ) => {
     const [ loading , setLoading ] = useState (true)
     const [ modo , setModo ] = useState ('normal')
     const [ clienteSeleccionado , setClienteSeleccionado ] = useState (undefined)
-
+    const [limpiaCampos , setLimpiaCampos] = useState(true)
+    const formAltaCliente = $('#formInserCliente')
     const actualizaLista = (  ) => {
         setLoading (true)
         setBanderaVec ( false )
     }
     const actualizaListaAalta  = (  ) => {
-        const formAltaCliente = $('#formInserCliente')
         formAltaCliente.slideToggle()
         setLoading (true)
         setBanderaVec ( false )
@@ -39,10 +39,10 @@ const ListaClientes = ( props ) => {
         return ( ) =>  setBanderaVec ( true )
     } , [ banderaVec ] )
     const updateSection = ( modo , cliente ) => {
-        const formAltaCliente = $('#formInserCliente')
         formAltaCliente.slideUp (  )
         setModo ( modo )
         setClienteSeleccionado ( cliente )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
     <div style = { { padding : 20 } }>
@@ -56,10 +56,11 @@ const ListaClientes = ( props ) => {
                 formAltaCliente.slideToggle ( )
                 setModo ( 'normal' )
                 setClienteSeleccionado ( undefined )
+                setLimpiaCampos(!limpiaCampos)
             } }
         />
         <div id = 'formInserCliente' style = { { display : 'none'  } }>
-            <FormAltaCliente actualizaListaAalta = { actualizaListaAalta } />
+            <FormAltaCliente actualizaListaAalta = { actualizaListaAalta } limpiaCampos={limpiaCampos}/>
         </div>
         <div>
             <MyComponent.texto

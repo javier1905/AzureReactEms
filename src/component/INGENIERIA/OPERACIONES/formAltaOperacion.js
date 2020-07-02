@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import MyComponent from '../../AAprimary/misComponentes'
 import { Alert } from 'react-bootstrap'
@@ -8,6 +8,9 @@ import { withSnackbar } from 'notistack'
 
 const FormAltaOperacion = ( props ) => {
     const [nombreOperacion , setNombreOperacion] = useState ( '' )
+    useEffect ( ()=> {
+        setNombreOperacion('')
+    } , [props.limpiaCampos])
     const miSubmit = e => {
         if ( nombreOperacion === ''  ) {
             var myAlert2 = $( '#myAlert2' )

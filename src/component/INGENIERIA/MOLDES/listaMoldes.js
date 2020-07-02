@@ -16,6 +16,7 @@ const ListaMoldes = ( props ) => {
     const [vecPiezas , setVecPiezas] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [moldeSeleccionado , setMoldeSeleccionado] = useState ( true )
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
 
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
@@ -45,16 +46,17 @@ const ListaMoldes = ( props ) => {
         formAltaMolde.slideToggle ( )
         setModo ( 'normal' )
         setMoldeSeleccionado ( undefined )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Lista de Moldes</Typography>
+                <Typography variant = 'h4'>Lista de Moldes</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add molde' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaMolde' style = { { display : 'none' } }>
-                    <FromAltaMolde methodAdd = { methodAdd } actualizaListaMoldes = { actualizaListaMoldes } vecPiezas = { vecPiezas } />
+                    <FromAltaMolde limpiaCampos={limpiaCampos}  methodAdd = { methodAdd } actualizaListaMoldes = { actualizaListaMoldes } vecPiezas = { vecPiezas } />
                 </div>
                 <div>
                     <Table>

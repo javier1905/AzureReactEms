@@ -18,6 +18,13 @@ const FormAltaTrabajador = ( props ) => {
     useEffect ( (  ) => {
         setVecPuestos ( props.vecPuestos )
     } , [ props.vecPuestos ] )
+    useEffect ( ()=> {
+        setNombreTrabajador('')
+        setApellidoTrabajador('')
+        setNacimientoTrabajador(null)
+        setIngresoTrabajador(null)
+        setIdPuesto('')
+    } , [props.limpiaCampos])
     const miSubmit = e => {
         if ( nombreTrabajador === ''  || apellidoTrabajador === '' || nacimientoTrabajador === null || ingresoTrabajador === null || idPuesto === '' ) {
             var myAlert2 = $( '#myAlert2' )

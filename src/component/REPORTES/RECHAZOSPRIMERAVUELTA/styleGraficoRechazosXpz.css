@@ -1,0 +1,10 @@
+.containerRxP {
+    margin-top: 30px;
+}
+.container-filtros{
+    margin-bottom: 30px;
+}
+.containerGrafico{
+    width: 100%;
+    overflow-y: auto;
+}

@@ -5,6 +5,8 @@ import { Bar } from 'react-chartjs-2'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import servicios from '../serviceReportes'
 import Moment from 'moment'
+import RechazosXpieza from './rechazosXpieza'
+import './styleRechazosPraVuelta.css'
 
 const RechazosPrimeraVuelta = ( props ) => {
     const [fechaFundicionDesde , setFechaFundicionDesde] = useState ( new Moment (`${new Date (  ).getFullYear (  )}-01-01T00:00:00.000`).format ( 'YYYY-MM-DDTHH:MM:ss.sss' ) )
@@ -22,6 +24,15 @@ const RechazosPrimeraVuelta = ( props ) => {
     const refGrafico = useRef (  )
     const abortController = new AbortController()
     useEffect ( (  ) => {
+        servicios.listaReporteRechazosPrimeraVuelta ( fechaFundicionDesde , fechaFundicionHasta ,
+            idMaquina === '' ? null : idMaquina , idPieza === '' ? null : idPieza ,
+            idMolde === '' ? null : idMolde , abortController , (vecFechas , vecProduccion , vecRechazos , vecPorcentaje) => {
+                setVecFechas ( vecFechas )
+                setVecProduccion ( vecProduccion )
+                setVecRechazos ( vecRechazos )
+                setVecPorcentajes ( vecPorcentaje )
+            }
+        )
         Servicios.listaMaquinas ( abortController , vec => setVecMaquinas(vec) )
         Servicios.listaPiezas ( abortController , vec => setVecPiezas(vec) )
         try { refGrafico.plugins.unregister ( ChartDataLabels ) } catch ( e ) {  }
@@ -178,14 +189,13 @@ const RechazosPrimeraVuelta = ( props ) => {
                     position : 'right' ,
                     id : 'id_escala_derecha' ,
                     gridLines : {
-                        display : true
+                        display : false
                     } ,
                     labels : {
                         show : true
                     } ,
                     ticks : {
-                        min : 0 ,
-                        stepSize: 200
+                        callback : value => `${value} %`
                     }
                 }
             ]
@@ -195,7 +205,7 @@ const RechazosPrimeraVuelta = ( props ) => {
         { ChartDataLabels }
     ]
     return (
-        <div>
+        <div className='containerR1raVuelta'>
             <div className = 'containerFilter' >
                 <MyComponent.fecha id = 'fechaFunDesde' label ='Fecha Fun Desde' value = { fechaFundicionDesde } onChange = { e => setFechaFundicionDesde ( e ) } />
                 <MyComponent.fecha id = 'fechaFunHasta' label ='Fecha Fun Hasta' value = { fechaFundicionHasta } onChange = { e => setFechaFundicionHasta ( e ) } />
@@ -229,6 +239,7 @@ const RechazosPrimeraVuelta = ( props ) => {
                     plugins = { plugins }
                 />
             </div>
+            <RechazosXpieza/>
         </div>
     )
 }

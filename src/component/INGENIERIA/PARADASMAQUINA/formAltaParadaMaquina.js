@@ -12,12 +12,15 @@ const FormAltaParadaMaquina = ( props ) => {
     const [tipoParadaMaquina , setTipoParadaMaquina] = useState ( false )
     const [idArea , setIdArea] = useState ( '' )
     const [setupParadaMaquina , setSetupParadaMaquina] = useState ( '' )
-
-
-
     useEffect ( (  ) => {
         setVecAreas ( props.vecAreas )
     } , [ props.vecAreas ] )
+    useEffect(()=> {
+        setNombreParadaMaquina('')
+        setTipoParadaMaquina(false)
+        setIdArea('')
+        setSetupParadaMaquina('')
+    },[props.limpiaCampos])
 
     const miSubmit = e => {
         if ( nombreParadaMaquina === '' || idArea === '' ) {

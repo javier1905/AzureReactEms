@@ -16,6 +16,7 @@ const ListaTrabajadores = ( props ) => {
     const [vecPuestos , setVecPuestos] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [trabajadorSeleccionado , setTrabajadorSeleccionado] = useState ( true )
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
 
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
@@ -45,16 +46,17 @@ const ListaTrabajadores = ( props ) => {
         formAltaTrabajador.slideToggle ( )
         setModo ( 'normal' )
         setTrabajadorSeleccionado ( undefined )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Lista de Trabajadores</Typography>
+                <Typography variant = 'h4'>Lista de Trabajadores</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add trabajador' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaTrabajador' style = { { display : 'none' } }>
-                    <FromAltaTrabajador methodAdd = { methodAdd } actualizaListaTrabajadores = { actualizaListaTrabajadores }  vecPuestos = { vecPuestos } />
+                    <FromAltaTrabajador limpiaCampos ={limpiaCampos} methodAdd = { methodAdd } actualizaListaTrabajadores = { actualizaListaTrabajadores }  vecPuestos = { vecPuestos } />
                 </div>
                 <div>
                     <Table>

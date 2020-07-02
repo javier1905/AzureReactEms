@@ -15,7 +15,7 @@ const ListaAreas = ( props ) => {
     const [vecAreas , setVecAreas] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [areaSeleccionada , setAreaSeleccionada] = useState ( true )
-
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
             const vecAre= await Servicios.listaAreas (  )
@@ -40,16 +40,17 @@ const ListaAreas = ( props ) => {
         formAltaArea.slideToggle ( )
         setModo ( 'normal' )
         setAreaSeleccionada ( undefined )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Lista de Areas</Typography>
+                <Typography variant = 'h4'>Lista de Areas</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add area' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaArea' style = { { display : 'none' } }>
-                    <FormAltaArea methodAdd = { methodAdd } actualizaListaAreas = { actualizaListaAreas } />
+                    <FormAltaArea limpiaCampos ={limpiaCampos} methodAdd = { methodAdd } actualizaListaAreas = { actualizaListaAreas } />
                 </div>
                 <div>
                     <Table>

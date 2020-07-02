@@ -1,13 +1,17 @@
-import React , { useState } from 'react'
+import React , { useState , useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import MyComponent from '../../AAprimary/misComponentes'
 import Servicios from './serviceClientes'
 import { Alert } from 'react-bootstrap'
 import $ from 'jquery'
 
-const FormAltalCliente = ( props ) => {
+const FormAltalCliente = ( {actualizaListaAalta , limpiaCampos} ) => {
     const [nombre,setNombre] = useState ('')
     const [razonSocial,setRazonSocial] = useState ('')
+    useEffect(() => {
+        setNombre('')
+        setRazonSocial('')
+    }, [limpiaCampos])
     const mySubmit = e => {
         const altaCli = async (  ) => {
             const men  = await Servicios.altaCliente ( nombre , razonSocial )
@@ -15,7 +19,7 @@ const FormAltalCliente = ( props ) => {
                 setNombre ( '' )
                 setRazonSocial ( '' )
                 alert ( men.mensaje )
-                props.actualizaListaAalta (  )
+                actualizaListaAalta (  )
             }
         }
         if ( nombre !== '' && razonSocial !== '' ) {

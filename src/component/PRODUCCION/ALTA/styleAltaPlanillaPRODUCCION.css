@@ -8,7 +8,7 @@ box-sizing: border-box;
     padding-bottom: 20px;
 }
 .container-header__container-fecha{
-    padding-bottom: 20px;
+    padding-bottom: 0px;
 }
 .container-operarios{
     border: solid 1px #303F9F;
@@ -64,7 +64,25 @@ td , th , thead {
     width: 100%;
     padding: 20px !important;
 }
-@media screen and (max-width:414px){
+.container-zonas {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.MuiFormControl-root{
+    margin-top: 10px !important;
+}
+.btn_addZona{
+    margin-top: 20px !important;
+}
+.container-btn_zonas{
+    text-align: center;
+    margin-bottom: 15px;
+}
+#btn_save-planillaProduccion{
+    margin-top: 15px;
+    width: 100%;
+}
+@media screen and (max-width:500px){
     .MuiFormControl-root{
         width: 100% !important;
         margin-bottom: 20px;
@@ -77,5 +95,21 @@ margin: 0px;
     }
     .MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-formControl.MuiInput-formControl{
         width: 100% !important;
+    }
+
+    .btn_addZona{
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+@media screen and  (min-width:500px) {
+    .txts_zonas {
+        width: 60px;
+        margin-right:5px ;
+    }
+    .MuiFormControl-root{
+        margin-top: 10px !important;
+        margin-right: 10px !important;
     }
 }

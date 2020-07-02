@@ -12,7 +12,11 @@ const FormAltaTipoMaquina = ( props ) => {
     const [vecOperaciones , setVecOperaciones] = useState ( [  ] )
     useEffect ( (  ) => {
         setVecOperaciones ( props.vecOperaciones )
-    }  , [ props ] )
+    }  , [ props.vecOperaciones ] )
+    useEffect ( ()=> {
+        setNombreTipoMaquina('')
+        setIdOperacion('')
+    } , [props.limpiaCampos])
     const miSubmit = e => {
         if ( nombreTipoMaquina === '' ||  idOperacion === ''   ) {
             var myAlert2 = $( '#myAlert2' )

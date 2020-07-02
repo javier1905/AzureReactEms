@@ -22,6 +22,9 @@ const FormAltaPiezaXhora = ( props ) => {
             setDesdePiezasXhs ( null )
         }
     } , [ props ] )
+    useEffect ( () => {
+        setCantidadPiezasXhs('')
+    } , [ props.limpiaCampos])
     const validaciones = (  ) => {
         var Alert = $( '#myAlert' )
         if ( !props.piezaXhora ) {

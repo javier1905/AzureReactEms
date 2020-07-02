@@ -15,6 +15,7 @@ const ListaPuestos = ( props ) => {
     const [vecPuestos , setVecPuestos] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [puestoSeleccionado , setPuestoSeleccionado] = useState ( true )
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
 
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
@@ -40,16 +41,18 @@ const ListaPuestos = ( props ) => {
         formAltaPuesto.slideToggle ( )
         setModo ( 'normal' )
         setPuestoSeleccionado ( undefined )
+        setLimpiaCampos(!limpiaCampos)
+
     }
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Lista de Puestos</Typography>
+                <Typography variant = 'h4'>Lista de Puestos</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add area' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaPuesto' style = { { display : 'none' } }>
-                    <FormAltaPuesto methodAdd = { methodAdd } actualizaListaPuestos = { actualizaListaPuestos } />
+                    <FormAltaPuesto limpiaCampos ={limpiaCampos} methodAdd = { methodAdd } actualizaListaPuestos = { actualizaListaPuestos } />
                 </div>
                 <div>
                     <Table>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import MyComponent from '../../AAprimary/misComponentes'
 import { Alert } from 'react-bootstrap'
@@ -8,6 +8,9 @@ import { withSnackbar } from 'notistack'
 
 const FormAltaArea = ( props ) => {
     const [nombreArea , setNombreArea] = useState ( '' )
+    useEffect ( ()=> {
+        setNombreArea('')
+    } , [props.limpiaCampos])
     const miSubmit = e => {
         if ( nombreArea === ''  ) {
             var myAlert2 = $( '#myAlert2' )
@@ -54,7 +57,7 @@ const FormAltaArea = ( props ) => {
     return (
         <div>
             <Form onSubmit = { miSubmit } >
-                <MyComponent.texto label = 'Nombre' value = { nombreArea } onChange = { e => setNombreArea ( e.target.value ) } />
+                <MyComponent.texto width = {300} label = 'Nombre' value = { nombreArea } onChange = { e => setNombreArea ( e.target.value ) } />
                 <MyComponent.botonSave/>
                 <Alert id = 'myAlert2' variant = 'danger' style = { { display : 'none' , marginTop : 20 } } />
             </Form>

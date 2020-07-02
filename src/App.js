@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router , Route , Switch } from 'react-router-dom'
 import Login from './component/LOGIN/indexLOGIN'
-import Home from './component/HOME/indexHOME'
+import Home from './component/HOME/home'
 import { Provider } from 'react-redux'
 import store from './Redux/store'
 import { CssBaseline } from '@material-ui/core'

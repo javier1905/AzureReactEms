@@ -16,7 +16,7 @@ const ListaTiposMaquina = ( props ) => {
     const [vecOperaciones , setVecOperaciones] = useState ( [  ] )
     const [modo , setModo] = useState ( 'normal' )
     const [tipoMaquinaSeleccionada , setTipoMaquinaSeleccionada] = useState ( true )
-
+    const [limpiaCampos , setLimpiaCampos] = useState ( true )
     useEffect ( (  ) => {
         const getServicios = async (  ) => {
             const vecTipoMaq = await Servicios.listaTiposMaquina (  )
@@ -45,16 +45,17 @@ const ListaTiposMaquina = ( props ) => {
         formAltaTipoMaquina.slideToggle ( )
         setModo ( 'normal' )
         setTipoMaquinaSeleccionada ( undefined )
+        setLimpiaCampos(!limpiaCampos)
     }
     return (
         <div>
             <SnackbarProvider maxSnack = { 3 } >
-                <Typography variant = 'h1'>Lista de Tipos de Maquina</Typography>
+                <Typography variant = 'h4'>Lista de Tipos de Maquina</Typography>
                 <div>
                     <MyComponent.botonAdd fontSize = 'large' size = { 40 } texto = 'Add tipo de maquina' onClick = { e => methodAdd (  ) } />
                 </div>
                 <div id = 'formAltaTipoMaquina' style = { { display : 'none' } }>
-                    <FormAltaTipoMaquina methodAdd = { methodAdd } actualizaListaTiposMaquina = { actualizaListaTiposMaquina } vecOperaciones = { vecOperaciones } />
+                    <FormAltaTipoMaquina limpiaCampos = {limpiaCampos} methodAdd = { methodAdd } actualizaListaTiposMaquina = { actualizaListaTiposMaquina } vecOperaciones = { vecOperaciones } />
                 </div>
                 <div>
                     <Table>

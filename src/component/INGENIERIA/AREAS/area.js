@@ -100,7 +100,7 @@ const Area = ( props ) => {
         props.modo === 'update' ?
         <tr>
             <td colSpan = { 4 } >
-                <MyComponent.texto label = 'Nombre' value = { nombreArea } onChange = { e => setNombreArea ( e.target.value ) } />
+                <MyComponent.texto width = {300}  label = 'Nombre' value = { nombreArea } onChange = { e => setNombreArea ( e.target.value ) } />
                 <MyComponent.botonAcept texto = 'Update area'  onClick = { e=> updateArea (  ) } />
                 <MyComponent.botonCancel texto = 'Cancel'  onClick = { e=> props.cambiaModo ( 'normal'  , undefined ) } />
                 <Alert id = 'myAlert' variant = 'danger' style = { { display : 'none' , marginTop : 20 } } />
