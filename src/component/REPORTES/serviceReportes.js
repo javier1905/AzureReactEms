@@ -1932,4 +1932,85 @@ servicios.listaRechazosXpieza = ( fechaFundicionDesde , fechaFundicionHasta , id
     }
     myFetch()
 }
+servicios.listaCalorias = ( fechaProduccionDesde , fechaProduccionHasta , abortController , callback ) => {
+    var cont = 0
+    var cont2 = 0
+    const myFetch = () => {
+        fetch( `${urlApi}/api/reportes/calorias` , {
+            method : 'POST' ,
+            body : JSON.stringify( {  fechaProduccionDesde , fechaProduccionHasta } ) ,
+            headers : new Headers ( {
+                'Accept' : 'Application/json' ,
+                'Content-Type' : 'Application/json' ,
+                authorization : `Bearer ${sessionStorage.getItem('token')}`
+            } ) ,
+            signal : abortController.signal
+        }  )
+        .then( result => result.json())
+        .then(json => {
+            if(Array.isArray(json)){
+                callback(json)
+            }
+            else {
+                cont ++
+                if(cont < 4) {
+                    myFetch()
+                }
+            }
+        })
+        .catch( e => {
+            if(e.name === 'AbortError') {
+                abortController.abort()
+            }
+            else {
+                cont2 ++
+                if(cont2 < 4) {
+                    myFetch()
+                }
+            }
+        })
+    }
+    myFetch()
+}
+
+servicios.listaDetalleCalorias = ( fechaProduccionDesde , fechaProduccionHasta , idTrabajador , abortController , callback ) => {
+    var cont = 0
+    var cont2 = 0
+    const myFetch = () => {
+        fetch( `${urlApi}/api/reportes/detalleCalorias` , {
+            method : 'POST' ,
+            body : JSON.stringify( {  fechaProduccionDesde , fechaProduccionHasta , idTrabajador } ) ,
+            headers : new Headers ( {
+                'Accept' : 'Application/json' ,
+                'Content-Type' : 'Application/json' ,
+                authorization : `Bearer ${sessionStorage.getItem('token')}`
+            } ) ,
+            signal : abortController.signal
+        }  )
+        .then( result => result.json())
+        .then(json => {
+            if(Array.isArray(json)){
+                callback(json)
+            }
+            else {
+                cont ++
+                if(cont < 4) {
+                    myFetch()
+                }
+            }
+        })
+        .catch( e => {
+            if(e.name === 'AbortError') {
+                abortController.abort()
+            }
+            else {
+                cont2 ++
+                if(cont2 < 4) {
+                    myFetch()
+                }
+            }
+        })
+    }
+    myFetch()
+}
 export default servicios

@@ -1,0 +1,59 @@
+.tdCalorias:hover{
+    cursor: pointer;
+    background-color: #40417D;
+    color: #ffffff;
+}
+#container-loading{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding: 20px;
+}
+.container-calorias{
+    display: flex;
+    flex-wrap: wrap;
+}
+.container-filtros{
+    width: 100%;
+}
+.container-tabla{
+    /* min-width: 375px; */
+    width: 375px;
+    flex-grow: 2;
+    flex-shrink: 2;
+    overflow-x: auto;
+}
+.contanier-trabajador{
+    box-sizing: border-box;
+   min-width: 375px;
+   overflow-x: auto;
+}
+.contanier-trabajador h6{
+width: 100%;
+margin: 15px 0px;
+}
+.tabla{
+    width: 100% !important;
+    min-width: 375px !important;
+}
+.table-responsive{
+    width: 100% !important;
+    min-width: 375px !important;
+}
+.container-detalle , .contanier-trabajador{
+    min-width: 328px;
+    width: 365px;
+    flex-grow: 1;
+    flex-shrink: 2;
+    overflow-x: auto;
+    box-sizing: border-box;
+    margin: 0px 10px;
+}
+.container-detalle img{
+    width: 100%;
+}
+@media screen and (min-width:500px){
+    .container-tabla{
+        width: 375px;
+    }
+}

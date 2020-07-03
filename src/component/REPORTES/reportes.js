@@ -9,6 +9,7 @@ import OeeGranallado from './OEEGRANALLADO/oeeGranallado'
 import OeeMecanizado from './OEEMECANIZADO/oeeMecanizado'
 import RechazosPrimeraVuelta from './RECHAZOSPRIMERAVUELTA/rechazosPrimeraVuelta'
 import ReporteParadasMaquina from './PARADASMAQUINA/ReporteParadasMaquina'
+import Calorias from './CALORIAS/calorias'
 
 const Reportes = props => {
 	const [value, setValue] = React.useState(0)
@@ -58,6 +59,11 @@ const Reportes = props => {
 						icon={<BarChartIcon />}
 						{...a11yProps(4)}
 					/>
+					<Tab
+						label='Calorias'
+						icon={<BarChartIcon />}
+						{...a11yProps(5)}
+					/>
 				</Tabs>
 			</AppBar>
 			<TabPanel value={value} index={0}>
@@ -74,6 +80,9 @@ const Reportes = props => {
 			</TabPanel>
 			<TabPanel value={value} index={4}>
 				<ReporteParadasMaquina/>
+			</TabPanel>
+			<TabPanel value={value} index={5}>
+				<Calorias/>
 			</TabPanel>
 		</div>
 	)
